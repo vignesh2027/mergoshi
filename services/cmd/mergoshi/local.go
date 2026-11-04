@@ -43,7 +43,7 @@ func runLocal(ctx context.Context, o localOpts) error {
 	}
 	for k, v := range map[string]string{
 		"NEAR_RPC_URL":              "http://127.0.0.1:" + o.port,
-		"NEAR_EXPLORER_URL":         "",
+		"NEAR_EXPLORER_URL":         "none",
 		"MERGOSHI_FAST":             "1",
 		"MERGOSHI_STATE_DIR":        filepath.Join(o.dir, "state"),
 		"MERGOSHI_TOKEN_FUNDING":    "10",
