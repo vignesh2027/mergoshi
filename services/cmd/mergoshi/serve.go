@@ -31,6 +31,9 @@ func (a *app) serve(ctx context.Context, addr, network string, withAttesters boo
 		if network == "local" {
 			every = 3 * time.Second
 		}
+		if d, err := time.ParseDuration(a.env.Get("MERGOSHI_ATTEST_EVERY")); err == nil && d > 0 {
+			every = d
+		}
 		atts, err := a.attesters(nil, []int{1, 2, 3})
 		if err != nil {
 			return err

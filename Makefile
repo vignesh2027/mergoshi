@@ -1,3 +1,4 @@
+PHONY_EXTRA := modal-secret modal-deploy
 .PHONY: all contract build test test-unit test-contract test-sandbox test-go test-sim sim local bootstrap attest serve status clean
 
 all: build
@@ -58,3 +59,11 @@ status: build
 
 clean:
 	rm -rf bin contract/target .localnet/home .localnet/env .localnet/state
+
+## Hosting (optional): the testnet attesters and a read-only dashboard on Modal.
+modal-secret:
+	modal secret create mergoshi-attesters-env --from-dotenv .env --force
+
+modal-deploy:
+	cd services && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o ../bin/mergoshi-linux-amd64 ./cmd/mergoshi
+	modal deploy deploy/modal_app.py

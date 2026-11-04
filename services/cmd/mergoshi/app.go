@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"math/big"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -303,6 +304,9 @@ func (a *app) attesters(only map[string]bool, which []int) ([]*attester.Attester
 		return nil, err
 	}
 	gh := github.New(a.env.Get("GITHUB_API_URL"), a.env.Get("GITHUB_TOKEN"))
+	maxPerTick, _ := strconv.Atoi(a.env.Get("MERGOSHI_MAX_PER_TICK"))
+	discoverEvery, _ := time.ParseDuration(a.env.Get("MERGOSHI_DISCOVER_EVERY"))
+	firstOnly := a.env.Get("MERGOSHI_DISCOVER_FIRST_ONLY") == "1"
 	var out []*attester.Attester
 	for _, i := range which {
 		idKey, keyKey := attesterEnv(i)
@@ -313,7 +317,8 @@ func (a *app) attesters(only map[string]bool, which []int) ([]*attester.Attester
 		// Each attester gets its own salt secret and its own GitHub client.
 		s := append(append([]byte{}, secret...), []byte(acc.ID)...)
 		cfg := attester.Config{
-			ID: acc.ID, Secret: s, Keeper: i == 1, Only: only,
+			ID: acc.ID, Secret: s, Keeper: i == 1, Only: only, MaxPerTick: maxPerTick,
+			DiscoverEvery: discoverEvery, NoDiscover: firstOnly && i != 1,
 			StatePath: fmt.Sprintf("%s/attester-%d.json", a.env.Or("MERGOSHI_STATE_DIR", ".state"), i),
 		}
 		ghc := github.New(gh.Base, gh.Token)

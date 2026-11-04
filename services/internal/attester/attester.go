@@ -48,9 +48,15 @@ type Config struct {
 	StatePath string
 	// Only, when set, limits merge discovery to these keys (used for a first mint).
 	Only map[string]bool
-	// Liar flips every merge claim's author; for the slashing demo only.
-	Liar bool
-	Logf func(format string, args ...any)
+	// MaxPerTick bounds how many new merges are read from GitHub per pass, to
+	// stay inside the unauthenticated rate limit (default 25).
+	MaxPerTick int
+	// NoDiscover makes this attester only answer rounds others opened.
+	NoDiscover bool
+	// DiscoverEvery spaces out searches for new merges; open rounds are still
+	// answered on every pass so no commit window is missed.
+	DiscoverEvery time.Duration
+	Logf          func(format string, args ...any)
 }
 
 // Attester is one attester's loop state.
@@ -63,8 +69,10 @@ type Attester struct {
 	committed map[string]*string // key to claim text (nil means NONE)
 	done      map[string]bool
 	users     map[int64]*github.User
+	built     map[string]builtClaim
 	params    *token.Params
 	since     time.Time
+	lastFind  time.Time
 	lastTx    []string
 }
 
@@ -73,7 +81,7 @@ func New(cfg Config, chain Chain, gh *github.Client) *Attester {
 	if cfg.Logf == nil {
 		cfg.Logf = log.Printf
 	}
-	a := &Attester{cfg: cfg, chain: chain, gh: gh, committed: map[string]*string{}, done: map[string]bool{}, users: map[int64]*github.User{}}
+	a := &Attester{cfg: cfg, chain: chain, gh: gh, committed: map[string]*string{}, done: map[string]bool{}, users: map[int64]*github.User{}, built: map[string]builtClaim{}}
 	if cfg.StatePath != "" {
 		if raw, err := os.ReadFile(cfg.StatePath); err == nil {
 			_ = json.Unmarshal(raw, &a.committed)
@@ -267,8 +275,11 @@ func (a *Attester) commit(ctx context.Context, rounds []token.Round) error {
 	items, texts = nil, nil
 
 	// 3. New merges in enrolled repositories, newest first.
-	if err := a.discover(ctx, open, add); err != nil {
-		a.cfg.Logf("%s: discover: %v", a.cfg.ID, err)
+	if !a.cfg.NoDiscover && time.Since(a.lastFind) >= a.cfg.DiscoverEvery {
+		a.lastFind = time.Now()
+		if err := a.discover(ctx, open, add); err != nil {
+			a.cfg.Logf("%s: discover: %v", a.cfg.ID, err)
+		}
 	}
 	return a.send(ctx, items, texts)
 }
@@ -345,7 +356,7 @@ func (a *Attester) discover(ctx context.Context, open map[string]token.Round, ad
 		if _, ok := open[key]; ok {
 			continue // handled above
 		}
-		if built >= 25 {
+		if built >= a.maxPerTick() {
 			break // keep each tick short and inside the API budget
 		}
 		done, err := a.chain.IsDone(ctx, key)
@@ -371,10 +382,17 @@ func (a *Attester) discover(ctx context.Context, open map[string]token.Round, ad
 		}
 	}
 	// Overlap a little: search results can lag behind the merge.
-	if built < 25 {
+	if built < a.maxPerTick() {
 		a.since = newest.Add(-30 * time.Minute)
 	}
 	return nil
+}
+
+func (a *Attester) maxPerTick() int {
+	if a.cfg.MaxPerTick > 0 {
+		return a.cfg.MaxPerTick
+	}
+	return 25
 }
 
 var (
@@ -382,8 +400,30 @@ var (
 	errSkip        = errors.New("not attested by policy")
 )
 
-// build reads GitHub and returns the canonical claim for key.
+type builtClaim struct {
+	text *string
+	err  error
+	at   time.Time
+}
+
+// build reads GitHub and returns the canonical claim for key. Answers are
+// remembered for ten minutes so a failed transaction does not cost the
+// rate limit again on the next pass.
 func (a *Attester) build(ctx context.Context, key string) (*string, error) {
+	if b, ok := a.built[key]; ok && time.Since(b.at) < 10*time.Minute {
+		return b.text, b.err
+	}
+	text, err := a.read(ctx, key)
+	// A missing gist or repository may appear any moment; only remember those
+	// negative answers for merges, which cannot change once merged.
+	negative := errors.Is(err, errUnconfirmed) || errors.Is(err, errSkip)
+	if err == nil || (negative && strings.HasPrefix(key, "merge:")) {
+		a.built[key] = builtClaim{text, err, time.Now()}
+	}
+	return text, err
+}
+
+func (a *Attester) read(ctx context.Context, key string) (*string, error) {
 	switch {
 	case strings.HasPrefix(key, "merge:"):
 		return a.buildMerge(ctx, key)
@@ -445,9 +485,6 @@ func (a *Attester) buildMerge(ctx context.Context, key string) (*string, error) 
 	}
 	for _, u := range apps {
 		m.Approvers = append(m.Approvers, claim.Approver{ID: u.ID, Login: u.Login})
-	}
-	if a.cfg.Liar {
-		m.AuthorID, m.AuthorLogin = 1, "mallory"
 	}
 	text := m.Text()
 	return &text, nil
