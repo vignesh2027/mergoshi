@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+/bin/
+contract/target/
+.localnet/
+__pycache__/
+*.pyc
+*.log
+.DS_Store

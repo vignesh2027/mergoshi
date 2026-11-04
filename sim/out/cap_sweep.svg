@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 440" width="880" height="440" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif">
+<rect width="880" height="440" fill="#FFFFFF" rx="14"/>
+<text x="78" y="28" font-size="17" font-weight="600" fill="#0B1B33">Choosing how many distinct authors open one daily slot</text>
+<text x="78" y="48" font-size="12.5" fill="#4A5B78">One simulated year per point, steady and farm scenarios, no exile</text>
+<line x1="78" y1="388.0" x2="630" y2="388.0" stroke="#E3ECF8"/>
+<text x="70" y="392.0" font-size="11" fill="#4A5B78" text-anchor="end">0%</text>
+<line x1="78" y1="323.2" x2="630" y2="323.2" stroke="#E3ECF8"/>
+<text x="70" y="327.2" font-size="11" fill="#4A5B78" text-anchor="end">20%</text>
+<line x1="78" y1="258.4" x2="630" y2="258.4" stroke="#E3ECF8"/>
+<text x="70" y="262.4" font-size="11" fill="#4A5B78" text-anchor="end">40%</text>
+<line x1="78" y1="193.6" x2="630" y2="193.6" stroke="#E3ECF8"/>
+<text x="70" y="197.6" font-size="11" fill="#4A5B78" text-anchor="end">60%</text>
+<line x1="78" y1="128.8" x2="630" y2="128.8" stroke="#E3ECF8"/>
+<text x="70" y="132.8" font-size="11" fill="#4A5B78" text-anchor="end">80%</text>
+<line x1="78" y1="64.0" x2="630" y2="64.0" stroke="#E3ECF8"/>
+<text x="70" y="68.0" font-size="11" fill="#4A5B78" text-anchor="end">100%</text>
+<text x="156.9" y="406" font-size="11" fill="#4A5B78" text-anchor="middle">2</text>
+<text x="314.6" y="406" font-size="11" fill="#4A5B78" text-anchor="middle">4</text>
+<text x="472.3" y="406" font-size="11" fill="#4A5B78" text-anchor="middle">6</text>
+<text x="630.0" y="406" font-size="11" fill="#4A5B78" text-anchor="middle">8</text>
+<text x="354.0" y="428" font-size="11.5" fill="#4A5B78" text-anchor="middle">distinct authors per extra daily slot</text>
+<polyline fill="none" stroke="#2563EB" stroke-width="2.2" stroke-linejoin="round" points="78.0,75.7 156.9,81.1 235.7,91.5 314.6,105.5 472.3,138.2 630.0,164.1"/>
+<line x1="648" y1="72" x2="670" y2="72" stroke="#2563EB" stroke-width="3"/>
+<text x="676" y="76" font-size="12" fill="#0B1B33">honest minted</text>
+<polyline fill="none" stroke="#4C1D95" stroke-width="2.2" stroke-linejoin="round" points="78.0,253.1 156.9,293.8 235.7,311.5 314.6,329.5 472.3,323.3 630.0,347.2"/>
+<line x1="648" y1="94" x2="670" y2="94" stroke="#4C1D95" stroke-width="3"/>
+<text x="676" y="98" font-size="12" fill="#0B1B33">farmer share</text>
+<rect x="78" y="64" width="552" height="324" fill="none" stroke="#E3ECF8"/>
+</svg>

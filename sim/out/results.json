@@ -1,0 +1,189 @@
+{
+ "params": {
+  "base_reward": "100000000000000000000",
+  "halving_every": 10000,
+  "author_bps": 7000,
+  "review_bps": 2000,
+  "attester_bps": 500,
+  "feast_bps": 500,
+  "max_paid_reviewers": 3,
+  "streak_step_bps": 1000,
+  "streak_max_bonus_bps": 4000,
+  "repo_daily_cap": 12,
+  "repo_floor": 1,
+  "authors_per_slot": 3,
+  "author_daily_cap": 4,
+  "min_github_age_days": 90,
+  "exile_min": "1000000000000000000000",
+  "max_merge_age_secs": 604800,
+  "feast_period_secs": 2592000,
+  "feast_burn_bps": 5000,
+  "feast_max_guests": 20,
+  "escrow_ttl_secs": 5184000,
+  "repo_enroll_burn": "500000000000000000000",
+  "quorum": 2
+ },
+ "days": 730,
+ "scenarios": {
+  "steady": {
+   "scenario": "steady",
+   "supply_day_365": 443232,
+   "supply_end": 663675,
+   "minted_end": 1675926,
+   "burned_end": 1012251,
+   "escrow_end": 32576,
+   "withheld_end": 9812,
+   "merges_minted": 20803,
+   "honest_coverage": 0.9252,
+   "genesis_coverage": 0.9314,
+   "attacker_share_day_365": 0.0,
+   "attacker_share_end": 0.0,
+   "repos_end": 30,
+   "links_end": 420,
+   "exiles": 0
+  },
+  "hype": {
+   "scenario": "hype",
+   "supply_day_365": 449781,
+   "supply_end": 635817,
+   "minted_end": 1802223,
+   "burned_end": 1166406,
+   "escrow_end": 25418,
+   "withheld_end": 10550,
+   "merges_minted": 25073,
+   "honest_coverage": 0.8975,
+   "genesis_coverage": 0.9024,
+   "attacker_share_day_365": 0.0,
+   "attacker_share_end": 0.0,
+   "repos_end": 30,
+   "links_end": 663,
+   "exiles": 0
+  },
+  "drought": {
+   "scenario": "drought",
+   "supply_day_365": 166444,
+   "supply_end": 229131,
+   "minted_end": 602704,
+   "burned_end": 373573,
+   "escrow_end": 11546,
+   "withheld_end": 3656,
+   "merges_minted": 5673,
+   "honest_coverage": 0.9349,
+   "genesis_coverage": 0.9383,
+   "attacker_share_day_365": 0.0,
+   "attacker_share_end": 0.0,
+   "repos_end": 22,
+   "links_end": 224,
+   "exiles": 0
+  },
+  "farm": {
+   "scenario": "farm",
+   "supply_day_365": 572501,
+   "supply_end": 817712,
+   "minted_end": 1775806,
+   "burned_end": 958094,
+   "escrow_end": 20561,
+   "withheld_end": 9174,
+   "merges_minted": 22903,
+   "honest_coverage": 0.9252,
+   "genesis_coverage": 0.9314,
+   "attacker_share_day_365": 0.236,
+   "attacker_share_end": 0.2477,
+   "repos_end": 31,
+   "links_end": 420,
+   "exiles": 0
+  },
+  "farm_exiled": {
+   "scenario": "farm_exiled",
+   "supply_day_365": 444128,
+   "supply_end": 641585,
+   "minted_end": 1693284,
+   "burned_end": 1051699,
+   "escrow_end": 25115,
+   "withheld_end": 9611,
+   "merges_minted": 21370,
+   "honest_coverage": 0.9252,
+   "genesis_coverage": 0.9314,
+   "attacker_share_day_365": 0.0715,
+   "attacker_share_end": 0.0769,
+   "repos_end": 39,
+   "links_end": 420,
+   "exiles": 9
+  }
+ },
+ "farm_without_caps": {
+  "scenario": "farm",
+  "supply_day_365": 2384371,
+  "supply_end": 2385475,
+  "minted_end": 2566206,
+  "burned_end": 180731,
+  "escrow_end": 0,
+  "withheld_end": 1185,
+  "merges_minted": 232484,
+  "honest_coverage": 1.0,
+  "genesis_coverage": 1.0,
+  "attacker_share_day_365": 0.9291,
+  "attacker_share_end": 0.9291,
+  "repos_end": 31,
+  "links_end": 420,
+  "exiles": 0
+ },
+ "sweep_repo_cap": [
+  {
+   "authors_per_slot": 1,
+   "honest_coverage": 0.9638,
+   "attacker_share": 0.4165
+  },
+  {
+   "authors_per_slot": 2,
+   "honest_coverage": 0.9473,
+   "attacker_share": 0.2908
+  },
+  {
+   "authors_per_slot": 3,
+   "honest_coverage": 0.915,
+   "attacker_share": 0.236
+  },
+  {
+   "authors_per_slot": 4,
+   "honest_coverage": 0.872,
+   "attacker_share": 0.1806
+  },
+  {
+   "authors_per_slot": 6,
+   "honest_coverage": 0.771,
+   "attacker_share": 0.1996
+  },
+  {
+   "authors_per_slot": 8,
+   "honest_coverage": 0.6909,
+   "attacker_share": 0.1258
+  }
+ ],
+ "sweep_author_cap": [
+  {
+   "author_daily_cap": 1,
+   "honest_coverage": 0.8402
+  },
+  {
+   "author_daily_cap": 2,
+   "honest_coverage": 0.9078
+  },
+  {
+   "author_daily_cap": 3,
+   "honest_coverage": 0.9143
+  },
+  {
+   "author_daily_cap": 4,
+   "honest_coverage": 0.915
+  },
+  {
+   "author_daily_cap": 6,
+   "honest_coverage": 0.9151
+  },
+  {
+   "author_daily_cap": 1000,
+   "honest_coverage": 0.9151
+  }
+ ]
+}

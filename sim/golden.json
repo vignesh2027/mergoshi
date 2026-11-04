@@ -1,0 +1,2661 @@
+{
+ "t0": 1793000000,
+ "repos": [
+  "prometheus/client_golang",
+  "helm/chart-testing"
+ ],
+ "params": {
+  "base_reward": "100000000000000000000",
+  "halving_every": 15,
+  "author_bps": 7000,
+  "review_bps": 2000,
+  "attester_bps": 500,
+  "feast_bps": 500,
+  "max_paid_reviewers": 3,
+  "streak_step_bps": 1000,
+  "streak_max_bonus_bps": 4000,
+  "repo_daily_cap": 4,
+  "repo_floor": 1,
+  "authors_per_slot": 2,
+  "author_daily_cap": 2,
+  "min_github_age_days": 90,
+  "exile_min": "1000000000000000000000",
+  "max_merge_age_secs": 604800,
+  "feast_period_secs": 2592000,
+  "feast_burn_bps": 5000,
+  "feast_max_guests": 3,
+  "escrow_ttl_secs": 1728000,
+  "repo_enroll_burn": "500000000000000000000",
+  "quorum": 2
+ },
+ "events": [
+  {
+   "kind": "merge",
+   "now": 1793145115,
+   "repo": "prometheus/client_golang",
+   "number": 1,
+   "merged_at": 1793144215,
+   "author": 4,
+   "author_created_at": 1758440000,
+   "approvers": [
+    8,
+    9,
+    10,
+    11
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793220445,
+   "repo": "helm/chart-testing",
+   "number": 1,
+   "merged_at": 1793219545,
+   "author": 4,
+   "author_created_at": 1758440000,
+   "approvers": [
+    6,
+    7
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793234133,
+   "repo": "helm/chart-testing",
+   "number": 2,
+   "merged_at": 1793233233,
+   "author": 3,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    6,
+    7,
+    10
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793244225,
+   "repo": "prometheus/client_golang",
+   "number": 3,
+   "merged_at": 1793243325,
+   "author": 12,
+   "author_created_at": 1791272000,
+   "approvers": [
+    2
+   ],
+   "status": "young"
+  },
+  {
+   "kind": "link",
+   "now": 1793259200,
+   "gid": 1
+  },
+  {
+   "kind": "link",
+   "now": 1793259200,
+   "gid": 2
+  },
+  {
+   "kind": "merge",
+   "now": 1793278766,
+   "repo": "prometheus/client_golang",
+   "number": 4,
+   "merged_at": 1793277866,
+   "author": 12,
+   "author_created_at": 1791272000,
+   "approvers": [
+    2,
+    7,
+    8,
+    11
+   ],
+   "status": "young"
+  },
+  {
+   "kind": "merge",
+   "now": 1793289528,
+   "repo": "helm/chart-testing",
+   "number": 4,
+   "merged_at": 1793288628,
+   "author": 7,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    9,
+    10,
+    11
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793324460,
+   "repo": "helm/chart-testing",
+   "number": 3,
+   "merged_at": 1793323560,
+   "author": 2,
+   "author_created_at": 1758440000,
+   "approvers": [
+    10,
+    11
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793418017,
+   "repo": "prometheus/client_golang",
+   "number": 5,
+   "merged_at": 1793417117,
+   "author": 11,
+   "author_created_at": 1758440000,
+   "approvers": [
+    8,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793471484,
+   "repo": "helm/chart-testing",
+   "number": 5,
+   "merged_at": 1793470584,
+   "author": 9,
+   "author_created_at": 1758440000,
+   "approvers": [
+    4,
+    7,
+    8,
+    11
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793492960,
+   "repo": "prometheus/client_golang",
+   "number": 6,
+   "merged_at": 1793492060,
+   "author": 1,
+   "author_created_at": 1758440000,
+   "approvers": [
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793496544,
+   "repo": "helm/chart-testing",
+   "number": 6,
+   "merged_at": 1793495644,
+   "author": 6,
+   "author_created_at": 1758440000,
+   "approvers": [
+    5
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793544804,
+   "repo": "helm/chart-testing",
+   "number": 8,
+   "merged_at": 1793543904,
+   "author": 8,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793557319,
+   "repo": "helm/chart-testing",
+   "number": 7,
+   "merged_at": 1793556419,
+   "author": 9,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793582102,
+   "repo": "prometheus/client_golang",
+   "number": 7,
+   "merged_at": 1793581202,
+   "author": 8,
+   "author_created_at": 1758440000,
+   "approvers": [
+    3,
+    5,
+    7,
+    9
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793606372,
+   "repo": "helm/chart-testing",
+   "number": 9,
+   "merged_at": 1793605472,
+   "author": 11,
+   "author_created_at": 1758440000,
+   "approvers": [
+    3
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793621535,
+   "repo": "prometheus/client_golang",
+   "number": 9,
+   "merged_at": 1793620635,
+   "author": 10,
+   "author_created_at": 1758440000,
+   "approvers": [
+    4
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793695453,
+   "repo": "prometheus/client_golang",
+   "number": 11,
+   "merged_at": 1793694553,
+   "author": 6,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793709840,
+   "repo": "prometheus/client_golang",
+   "number": 10,
+   "merged_at": 1793708940,
+   "author": 10,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2,
+    3,
+    5,
+    7
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793721319,
+   "repo": "helm/chart-testing",
+   "number": 10,
+   "merged_at": 1793720419,
+   "author": 12,
+   "author_created_at": 1791272000,
+   "approvers": [
+    9
+   ],
+   "status": "young"
+  },
+  {
+   "kind": "merge",
+   "now": 1793743132,
+   "repo": "helm/chart-testing",
+   "number": 12,
+   "merged_at": 1793742232,
+   "author": 1,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793760261,
+   "repo": "helm/chart-testing",
+   "number": 11,
+   "merged_at": 1793759361,
+   "author": 9,
+   "author_created_at": 1758440000,
+   "approvers": [
+    3,
+    7
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793838638,
+   "repo": "prometheus/client_golang",
+   "number": 12,
+   "merged_at": 1793837738,
+   "author": 3,
+   "author_created_at": 1758440000,
+   "approvers": [
+    5,
+    7,
+    8,
+    10
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793843717,
+   "repo": "helm/chart-testing",
+   "number": 13,
+   "merged_at": 1793842817,
+   "author": 8,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "eat",
+   "now": 1793863999,
+   "ids": [
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+   ]
+  },
+  {
+   "kind": "merge",
+   "now": 1793922937,
+   "repo": "prometheus/client_golang",
+   "number": 2,
+   "merged_at": 1793145337,
+   "author": 2,
+   "author_created_at": 1758440000,
+   "approvers": [
+    3
+   ],
+   "status": "stale"
+  },
+  {
+   "kind": "merge",
+   "now": 1793953983,
+   "repo": "prometheus/client_golang",
+   "number": 13,
+   "merged_at": 1793953083,
+   "author": 8,
+   "author_created_at": 1758440000,
+   "approvers": [
+    9
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793975680,
+   "repo": "prometheus/client_golang",
+   "number": 14,
+   "merged_at": 1793974780,
+   "author": 9,
+   "author_created_at": 1758440000,
+   "approvers": [
+    3
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793989005,
+   "repo": "prometheus/client_golang",
+   "number": 15,
+   "merged_at": 1793988105,
+   "author": 5,
+   "author_created_at": 1758440000,
+   "approvers": [
+    8,
+    9
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1793991265,
+   "repo": "helm/chart-testing",
+   "number": 15,
+   "merged_at": 1793990365,
+   "author": 9,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2,
+    7
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794038343,
+   "repo": "helm/chart-testing",
+   "number": 17,
+   "merged_at": 1794037443,
+   "author": 2,
+   "author_created_at": 1758440000,
+   "approvers": [
+    5
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794106807,
+   "repo": "helm/chart-testing",
+   "number": 16,
+   "merged_at": 1794105907,
+   "author": 8,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794144646,
+   "repo": "helm/chart-testing",
+   "number": 18,
+   "merged_at": 1794143746,
+   "author": 7,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    3,
+    6,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794159240,
+   "repo": "prometheus/client_golang",
+   "number": 16,
+   "merged_at": 1794158340,
+   "author": 2,
+   "author_created_at": 1758440000,
+   "approvers": [
+    5,
+    6,
+    10,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794181254,
+   "repo": "prometheus/client_golang",
+   "number": 17,
+   "merged_at": 1794180354,
+   "author": 2,
+   "author_created_at": 1758440000,
+   "approvers": [
+    3
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "link",
+   "now": 1794296000,
+   "gid": 5
+  },
+  {
+   "kind": "merge",
+   "now": 1794331091,
+   "repo": "prometheus/client_golang",
+   "number": 19,
+   "merged_at": 1794330191,
+   "author": 5,
+   "author_created_at": 1758440000,
+   "approvers": [
+    3
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794363304,
+   "repo": "prometheus/client_golang",
+   "number": 18,
+   "merged_at": 1794362404,
+   "author": 11,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794394480,
+   "repo": "prometheus/client_golang",
+   "number": 8,
+   "merged_at": 1793616880,
+   "author": 8,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "stale"
+  },
+  {
+   "kind": "merge",
+   "now": 1794474682,
+   "repo": "helm/chart-testing",
+   "number": 20,
+   "merged_at": 1794473782,
+   "author": 6,
+   "author_created_at": 1758440000,
+   "approvers": [
+    11,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794477211,
+   "repo": "helm/chart-testing",
+   "number": 19,
+   "merged_at": 1794476311,
+   "author": 7,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794482003,
+   "repo": "prometheus/client_golang",
+   "number": 20,
+   "merged_at": 1794481103,
+   "author": 5,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794563653,
+   "repo": "helm/chart-testing",
+   "number": 21,
+   "merged_at": 1794562753,
+   "author": 7,
+   "author_created_at": 1758440000,
+   "approvers": [
+    6
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794605140,
+   "repo": "prometheus/client_golang",
+   "number": 21,
+   "merged_at": 1794604240,
+   "author": 10,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2,
+    7
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794649859,
+   "repo": "helm/chart-testing",
+   "number": 22,
+   "merged_at": 1794648959,
+   "author": 6,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    4,
+    7,
+    10
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794658532,
+   "repo": "prometheus/client_golang",
+   "number": 22,
+   "merged_at": 1794657632,
+   "author": 5,
+   "author_created_at": 1758440000,
+   "approvers": [
+    6
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794710996,
+   "repo": "prometheus/client_golang",
+   "number": 23,
+   "merged_at": 1794710096,
+   "author": 3,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    2,
+    4,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "eat",
+   "now": 1794727999,
+   "ids": [
+    3,
+    4,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+   ]
+  },
+  {
+   "kind": "merge",
+   "now": 1794750723,
+   "repo": "helm/chart-testing",
+   "number": 14,
+   "merged_at": 1793973123,
+   "author": 1,
+   "author_created_at": 1758440000,
+   "approvers": [
+    12
+   ],
+   "status": "stale"
+  },
+  {
+   "kind": "merge",
+   "now": 1794752947,
+   "repo": "helm/chart-testing",
+   "number": 23,
+   "merged_at": 1794752047,
+   "author": 11,
+   "author_created_at": 1758440000,
+   "approvers": [
+    3
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794778338,
+   "repo": "prometheus/client_golang",
+   "number": 24,
+   "merged_at": 1794777438,
+   "author": 7,
+   "author_created_at": 1758440000,
+   "approvers": [
+    3,
+    6,
+    8,
+    10
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794833474,
+   "repo": "helm/chart-testing",
+   "number": 25,
+   "merged_at": 1794832574,
+   "author": 7,
+   "author_created_at": 1758440000,
+   "approvers": [
+    6
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794847125,
+   "repo": "helm/chart-testing",
+   "number": 26,
+   "merged_at": 1794846225,
+   "author": 1,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794851444,
+   "repo": "prometheus/client_golang",
+   "number": 26,
+   "merged_at": 1794850544,
+   "author": 11,
+   "author_created_at": 1758440000,
+   "approvers": [
+    3,
+    4,
+    6,
+    7
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794883516,
+   "repo": "prometheus/client_golang",
+   "number": 25,
+   "merged_at": 1794882616,
+   "author": 3,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    6,
+    7,
+    10
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794973631,
+   "repo": "helm/chart-testing",
+   "number": 27,
+   "merged_at": 1794972731,
+   "author": 6,
+   "author_created_at": 1758440000,
+   "approvers": [
+    9,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794990505,
+   "repo": "helm/chart-testing",
+   "number": 29,
+   "merged_at": 1794989605,
+   "author": 3,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1794999311,
+   "repo": "prometheus/client_golang",
+   "number": 28,
+   "merged_at": 1794998411,
+   "author": 9,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795027295,
+   "repo": "prometheus/client_golang",
+   "number": 27,
+   "merged_at": 1795026395,
+   "author": 6,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    2,
+    3,
+    8
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795039647,
+   "repo": "helm/chart-testing",
+   "number": 30,
+   "merged_at": 1795038747,
+   "author": 10,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795041910,
+   "repo": "helm/chart-testing",
+   "number": 28,
+   "merged_at": 1795041010,
+   "author": 4,
+   "author_created_at": 1758440000,
+   "approvers": [
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795075738,
+   "repo": "prometheus/client_golang",
+   "number": 30,
+   "merged_at": 1795074838,
+   "author": 7,
+   "author_created_at": 1758440000,
+   "approvers": [
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795079951,
+   "repo": "helm/chart-testing",
+   "number": 31,
+   "merged_at": 1795079051,
+   "author": 9,
+   "author_created_at": 1758440000,
+   "approvers": [
+    5
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795145431,
+   "repo": "prometheus/client_golang",
+   "number": 29,
+   "merged_at": 1795144531,
+   "author": 3,
+   "author_created_at": 1758440000,
+   "approvers": [
+    6
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795202144,
+   "repo": "helm/chart-testing",
+   "number": 32,
+   "merged_at": 1795201244,
+   "author": 6,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    3,
+    10,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795209134,
+   "repo": "prometheus/client_golang",
+   "number": 32,
+   "merged_at": 1795208234,
+   "author": 6,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795228401,
+   "repo": "prometheus/client_golang",
+   "number": 31,
+   "merged_at": 1795227501,
+   "author": 1,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795276928,
+   "repo": "prometheus/client_golang",
+   "number": 35,
+   "merged_at": 1795276028,
+   "author": 8,
+   "author_created_at": 1758440000,
+   "approvers": [
+    5
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795286817,
+   "repo": "prometheus/client_golang",
+   "number": 34,
+   "merged_at": 1795285917,
+   "author": 7,
+   "author_created_at": 1758440000,
+   "approvers": [
+    11
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795310812,
+   "repo": "prometheus/client_golang",
+   "number": 33,
+   "merged_at": 1795309912,
+   "author": 10,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2,
+    3,
+    4,
+    6
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795315319,
+   "repo": "helm/chart-testing",
+   "number": 33,
+   "merged_at": 1795314419,
+   "author": 8,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2,
+    10
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795350422,
+   "repo": "helm/chart-testing",
+   "number": 37,
+   "merged_at": 1795349522,
+   "author": 4,
+   "author_created_at": 1758440000,
+   "approvers": [
+    9
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795356866,
+   "repo": "helm/chart-testing",
+   "number": 35,
+   "merged_at": 1795355966,
+   "author": 6,
+   "author_created_at": 1758440000,
+   "approvers": [
+    7,
+    8
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795387400,
+   "repo": "helm/chart-testing",
+   "number": 36,
+   "merged_at": 1795386500,
+   "author": 4,
+   "author_created_at": 1758440000,
+   "approvers": [
+    7
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795436252,
+   "repo": "helm/chart-testing",
+   "number": 38,
+   "merged_at": 1795435352,
+   "author": 4,
+   "author_created_at": 1758440000,
+   "approvers": [
+    3
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795454653,
+   "repo": "prometheus/client_golang",
+   "number": 36,
+   "merged_at": 1795453753,
+   "author": 6,
+   "author_created_at": 1758440000,
+   "approvers": [
+    9
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795511414,
+   "repo": "helm/chart-testing",
+   "number": 42,
+   "merged_at": 1795510514,
+   "author": 6,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795549644,
+   "repo": "helm/chart-testing",
+   "number": 39,
+   "merged_at": 1795548744,
+   "author": 11,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    7
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795558897,
+   "repo": "helm/chart-testing",
+   "number": 41,
+   "merged_at": 1795557997,
+   "author": 11,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795568882,
+   "repo": "prometheus/client_golang",
+   "number": 37,
+   "merged_at": 1795567982,
+   "author": 5,
+   "author_created_at": 1758440000,
+   "approvers": [
+    3,
+    6,
+    7,
+    8
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795574223,
+   "repo": "helm/chart-testing",
+   "number": 40,
+   "merged_at": 1795573323,
+   "author": 2,
+   "author_created_at": 1758440000,
+   "approvers": [
+    10,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "eat",
+   "now": 1795591999,
+   "ids": [
+    3,
+    4,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+   ]
+  },
+  {
+   "kind": "feast",
+   "now": 1795592000
+  },
+  {
+   "kind": "merge",
+   "now": 1795595062,
+   "repo": "helm/chart-testing",
+   "number": 24,
+   "merged_at": 1794817462,
+   "author": 5,
+   "author_created_at": 1758440000,
+   "approvers": [
+    4
+   ],
+   "status": "stale"
+  },
+  {
+   "kind": "merge",
+   "now": 1795699724,
+   "repo": "helm/chart-testing",
+   "number": 44,
+   "merged_at": 1795698824,
+   "author": 2,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    3,
+    5,
+    10
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795746794,
+   "repo": "helm/chart-testing",
+   "number": 43,
+   "merged_at": 1795745894,
+   "author": 1,
+   "author_created_at": 1758440000,
+   "approvers": [
+    9
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795820362,
+   "repo": "helm/chart-testing",
+   "number": 45,
+   "merged_at": 1795819462,
+   "author": 4,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2,
+    3,
+    6,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "link",
+   "now": 1795851200,
+   "gid": 7
+  },
+  {
+   "kind": "link",
+   "now": 1795851200,
+   "gid": 9
+  },
+  {
+   "kind": "merge",
+   "now": 1795856912,
+   "repo": "helm/chart-testing",
+   "number": 46,
+   "merged_at": 1795856012,
+   "author": 5,
+   "author_created_at": 1758440000,
+   "approvers": [
+    6,
+    7
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795859202,
+   "repo": "helm/chart-testing",
+   "number": 47,
+   "merged_at": 1795858302,
+   "author": 9,
+   "author_created_at": 1758440000,
+   "approvers": [
+    4,
+    5
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795887604,
+   "repo": "prometheus/client_golang",
+   "number": 38,
+   "merged_at": 1795886704,
+   "author": 2,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795897130,
+   "repo": "prometheus/client_golang",
+   "number": 39,
+   "merged_at": 1795896230,
+   "author": 3,
+   "author_created_at": 1758440000,
+   "approvers": [
+    5,
+    7,
+    9,
+    10
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1795913194,
+   "repo": "prometheus/client_golang",
+   "number": 40,
+   "merged_at": 1795912294,
+   "author": 1,
+   "author_created_at": 1758440000,
+   "approvers": [
+    6,
+    7
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796034819,
+   "repo": "helm/chart-testing",
+   "number": 34,
+   "merged_at": 1795257219,
+   "author": 11,
+   "author_created_at": 1758440000,
+   "approvers": [
+    6,
+    10
+   ],
+   "status": "stale"
+  },
+  {
+   "kind": "merge",
+   "now": 1796041478,
+   "repo": "prometheus/client_golang",
+   "number": 41,
+   "merged_at": 1796040578,
+   "author": 4,
+   "author_created_at": 1758440000,
+   "approvers": [
+    10,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796047752,
+   "repo": "helm/chart-testing",
+   "number": 49,
+   "merged_at": 1796046852,
+   "author": 6,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796067598,
+   "repo": "helm/chart-testing",
+   "number": 51,
+   "merged_at": 1796066698,
+   "author": 12,
+   "author_created_at": 1791272000,
+   "approvers": [
+    3,
+    9
+   ],
+   "status": "young"
+  },
+  {
+   "kind": "merge",
+   "now": 1796089024,
+   "repo": "helm/chart-testing",
+   "number": 48,
+   "merged_at": 1796088124,
+   "author": 8,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2,
+    6,
+    10,
+    11
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796118331,
+   "repo": "helm/chart-testing",
+   "number": 52,
+   "merged_at": 1796117431,
+   "author": 3,
+   "author_created_at": 1758440000,
+   "approvers": [
+    4,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796119305,
+   "repo": "prometheus/client_golang",
+   "number": 42,
+   "merged_at": 1796118405,
+   "author": 3,
+   "author_created_at": 1758440000,
+   "approvers": [
+    4,
+    10,
+    11,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796129543,
+   "repo": "prometheus/client_golang",
+   "number": 43,
+   "merged_at": 1796128643,
+   "author": 5,
+   "author_created_at": 1758440000,
+   "approvers": [
+    3
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796226658,
+   "repo": "helm/chart-testing",
+   "number": 53,
+   "merged_at": 1796225758,
+   "author": 11,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    5,
+    8,
+    9
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796291724,
+   "repo": "prometheus/client_golang",
+   "number": 45,
+   "merged_at": 1796290824,
+   "author": 8,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796303190,
+   "repo": "prometheus/client_golang",
+   "number": 44,
+   "merged_at": 1796302290,
+   "author": 8,
+   "author_created_at": 1758440000,
+   "approvers": [
+    3,
+    6
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796305570,
+   "repo": "helm/chart-testing",
+   "number": 54,
+   "merged_at": 1796304670,
+   "author": 6,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796315704,
+   "repo": "prometheus/client_golang",
+   "number": 46,
+   "merged_at": 1796314804,
+   "author": 7,
+   "author_created_at": 1758440000,
+   "approvers": [
+    3,
+    4
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796354336,
+   "repo": "helm/chart-testing",
+   "number": 55,
+   "merged_at": 1796353436,
+   "author": 4,
+   "author_created_at": 1758440000,
+   "approvers": [
+    3
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796385685,
+   "repo": "helm/chart-testing",
+   "number": 57,
+   "merged_at": 1796384785,
+   "author": 9,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2,
+    4,
+    8,
+    10
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796410962,
+   "repo": "helm/chart-testing",
+   "number": 56,
+   "merged_at": 1796410062,
+   "author": 8,
+   "author_created_at": 1758440000,
+   "approvers": [
+    4
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796427331,
+   "repo": "helm/chart-testing",
+   "number": 58,
+   "merged_at": 1796426431,
+   "author": 12,
+   "author_created_at": 1791272000,
+   "approvers": [
+    2,
+    3,
+    4,
+    11
+   ],
+   "status": "young"
+  },
+  {
+   "kind": "eat",
+   "now": 1796455999,
+   "ids": [
+    3,
+    4,
+    6,
+    8,
+    10,
+    11,
+    12
+   ]
+  },
+  {
+   "kind": "merge",
+   "now": 1796475773,
+   "repo": "helm/chart-testing",
+   "number": 60,
+   "merged_at": 1796474873,
+   "author": 6,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2,
+    3
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796492123,
+   "repo": "prometheus/client_golang",
+   "number": 47,
+   "merged_at": 1796491223,
+   "author": 9,
+   "author_created_at": 1758440000,
+   "approvers": [
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796519365,
+   "repo": "helm/chart-testing",
+   "number": 59,
+   "merged_at": 1796518465,
+   "author": 7,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796576704,
+   "repo": "helm/chart-testing",
+   "number": 61,
+   "merged_at": 1796575804,
+   "author": 7,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    6,
+    11,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796612164,
+   "repo": "prometheus/client_golang",
+   "number": 48,
+   "merged_at": 1796611264,
+   "author": 8,
+   "author_created_at": 1758440000,
+   "approvers": [
+    6,
+    10
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796766724,
+   "repo": "helm/chart-testing",
+   "number": 63,
+   "merged_at": 1796765824,
+   "author": 10,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796811822,
+   "repo": "helm/chart-testing",
+   "number": 65,
+   "merged_at": 1796810922,
+   "author": 1,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796822567,
+   "repo": "helm/chart-testing",
+   "number": 64,
+   "merged_at": 1796821667,
+   "author": 10,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    9
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796829759,
+   "repo": "helm/chart-testing",
+   "number": 50,
+   "merged_at": 1796052159,
+   "author": 11,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "stale"
+  },
+  {
+   "kind": "merge",
+   "now": 1796833751,
+   "repo": "prometheus/client_golang",
+   "number": 51,
+   "merged_at": 1796832851,
+   "author": 6,
+   "author_created_at": 1758440000,
+   "approvers": [
+    4,
+    8
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796842743,
+   "repo": "prometheus/client_golang",
+   "number": 50,
+   "merged_at": 1796841843,
+   "author": 12,
+   "author_created_at": 1791272000,
+   "approvers": [
+    3
+   ],
+   "status": "young"
+  },
+  {
+   "kind": "merge",
+   "now": 1796853858,
+   "repo": "prometheus/client_golang",
+   "number": 49,
+   "merged_at": 1796852958,
+   "author": 1,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796913054,
+   "repo": "helm/chart-testing",
+   "number": 66,
+   "merged_at": 1796912154,
+   "author": 1,
+   "author_created_at": 1758440000,
+   "approvers": [
+    5,
+    11
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1796952186,
+   "repo": "prometheus/client_golang",
+   "number": 52,
+   "merged_at": 1796951286,
+   "author": 10,
+   "author_created_at": 1758440000,
+   "approvers": [
+    7,
+    11
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797016440,
+   "repo": "prometheus/client_golang",
+   "number": 54,
+   "merged_at": 1797015540,
+   "author": 5,
+   "author_created_at": 1758440000,
+   "approvers": [
+    10
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797044707,
+   "repo": "prometheus/client_golang",
+   "number": 53,
+   "merged_at": 1797043807,
+   "author": 7,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797044817,
+   "repo": "helm/chart-testing",
+   "number": 67,
+   "merged_at": 1797043917,
+   "author": 12,
+   "author_created_at": 1791272000,
+   "approvers": [
+    1,
+    3,
+    6,
+    9
+   ],
+   "status": "young"
+  },
+  {
+   "kind": "merge",
+   "now": 1797083990,
+   "repo": "prometheus/client_golang",
+   "number": 55,
+   "merged_at": 1797083090,
+   "author": 10,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797093722,
+   "repo": "prometheus/client_golang",
+   "number": 56,
+   "merged_at": 1797092822,
+   "author": 2,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    8
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797159182,
+   "repo": "prometheus/client_golang",
+   "number": 57,
+   "merged_at": 1797158282,
+   "author": 9,
+   "author_created_at": 1758440000,
+   "approvers": [
+    6
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797194718,
+   "repo": "prometheus/client_golang",
+   "number": 58,
+   "merged_at": 1797193818,
+   "author": 4,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    2,
+    9,
+    10
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797246439,
+   "repo": "prometheus/client_golang",
+   "number": 59,
+   "merged_at": 1797245539,
+   "author": 4,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    6
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797272104,
+   "repo": "prometheus/client_golang",
+   "number": 60,
+   "merged_at": 1797271204,
+   "author": 5,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797306134,
+   "repo": "prometheus/client_golang",
+   "number": 61,
+   "merged_at": 1797305234,
+   "author": 8,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "eat",
+   "now": 1797319999,
+   "ids": [
+    3,
+    4,
+    6,
+    8,
+    10,
+    11,
+    12
+   ]
+  },
+  {
+   "kind": "merge",
+   "now": 1797323382,
+   "repo": "prometheus/client_golang",
+   "number": 64,
+   "merged_at": 1797322482,
+   "author": 8,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797351949,
+   "repo": "helm/chart-testing",
+   "number": 69,
+   "merged_at": 1797351049,
+   "author": 7,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2,
+    3,
+    9,
+    10
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797357459,
+   "repo": "prometheus/client_golang",
+   "number": 63,
+   "merged_at": 1797356559,
+   "author": 9,
+   "author_created_at": 1758440000,
+   "approvers": [
+    7
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797391897,
+   "repo": "prometheus/client_golang",
+   "number": 62,
+   "merged_at": 1797390997,
+   "author": 8,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797449556,
+   "repo": "prometheus/client_golang",
+   "number": 65,
+   "merged_at": 1797448656,
+   "author": 8,
+   "author_created_at": 1758440000,
+   "approvers": [
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797498288,
+   "repo": "helm/chart-testing",
+   "number": 62,
+   "merged_at": 1796720688,
+   "author": 1,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "stale"
+  },
+  {
+   "kind": "merge",
+   "now": 1797506425,
+   "repo": "prometheus/client_golang",
+   "number": 67,
+   "merged_at": 1797505525,
+   "author": 6,
+   "author_created_at": 1758440000,
+   "approvers": [
+    9
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797538082,
+   "repo": "helm/chart-testing",
+   "number": 70,
+   "merged_at": 1797537182,
+   "author": 11,
+   "author_created_at": 1758440000,
+   "approvers": [
+    10,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797543145,
+   "repo": "helm/chart-testing",
+   "number": 71,
+   "merged_at": 1797542245,
+   "author": 2,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    3,
+    5,
+    6
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797543447,
+   "repo": "prometheus/client_golang",
+   "number": 66,
+   "merged_at": 1797542547,
+   "author": 3,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797638306,
+   "repo": "prometheus/client_golang",
+   "number": 69,
+   "merged_at": 1797637406,
+   "author": 7,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797638336,
+   "repo": "helm/chart-testing",
+   "number": 73,
+   "merged_at": 1797637436,
+   "author": 3,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    6
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797803389,
+   "repo": "helm/chart-testing",
+   "number": 74,
+   "merged_at": 1797802489,
+   "author": 8,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797861340,
+   "repo": "helm/chart-testing",
+   "number": 76,
+   "merged_at": 1797860440,
+   "author": 8,
+   "author_created_at": 1758440000,
+   "approvers": [
+    6
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797892170,
+   "repo": "prometheus/client_golang",
+   "number": 70,
+   "merged_at": 1797891270,
+   "author": 4,
+   "author_created_at": 1758440000,
+   "approvers": [
+    6
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797897751,
+   "repo": "helm/chart-testing",
+   "number": 75,
+   "merged_at": 1797896851,
+   "author": 12,
+   "author_created_at": 1791272000,
+   "approvers": [
+    5
+   ],
+   "status": "young"
+  },
+  {
+   "kind": "merge",
+   "now": 1797942536,
+   "repo": "prometheus/client_golang",
+   "number": 71,
+   "merged_at": 1797941636,
+   "author": 2,
+   "author_created_at": 1758440000,
+   "approvers": [
+    8
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1797960257,
+   "repo": "helm/chart-testing",
+   "number": 77,
+   "merged_at": 1797959357,
+   "author": 4,
+   "author_created_at": 1758440000,
+   "approvers": [
+    6,
+    8,
+    10,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798019856,
+   "repo": "prometheus/client_golang",
+   "number": 73,
+   "merged_at": 1798018956,
+   "author": 8,
+   "author_created_at": 1758440000,
+   "approvers": [
+    9,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798034360,
+   "repo": "prometheus/client_golang",
+   "number": 72,
+   "merged_at": 1798033460,
+   "author": 3,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    5,
+    6,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798041699,
+   "repo": "prometheus/client_golang",
+   "number": 74,
+   "merged_at": 1798040799,
+   "author": 10,
+   "author_created_at": 1758440000,
+   "approvers": [
+    5,
+    6,
+    7,
+    9
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798129357,
+   "repo": "helm/chart-testing",
+   "number": 68,
+   "merged_at": 1797351757,
+   "author": 8,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "stale"
+  },
+  {
+   "kind": "merge",
+   "now": 1798129449,
+   "repo": "prometheus/client_golang",
+   "number": 75,
+   "merged_at": 1798128549,
+   "author": 9,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    2,
+    6,
+    7
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798146237,
+   "repo": "helm/chart-testing",
+   "number": 79,
+   "merged_at": 1798145337,
+   "author": 9,
+   "author_created_at": 1758440000,
+   "approvers": [
+    7,
+    11
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798150606,
+   "repo": "helm/chart-testing",
+   "number": 81,
+   "merged_at": 1798149706,
+   "author": 1,
+   "author_created_at": 1758440000,
+   "approvers": [
+    3,
+    5,
+    11,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798155574,
+   "repo": "helm/chart-testing",
+   "number": 80,
+   "merged_at": 1798154674,
+   "author": 10,
+   "author_created_at": 1758440000,
+   "approvers": [
+    3,
+    8
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798167411,
+   "repo": "helm/chart-testing",
+   "number": 78,
+   "merged_at": 1798166511,
+   "author": 11,
+   "author_created_at": 1758440000,
+   "approvers": [
+    6,
+    7,
+    9,
+    10
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "eat",
+   "now": 1798183999,
+   "ids": [
+    3,
+    4,
+    6,
+    8,
+    10,
+    11,
+    12
+   ]
+  },
+  {
+   "kind": "feast",
+   "now": 1798184000
+  },
+  {
+   "kind": "merge",
+   "now": 1798209892,
+   "repo": "helm/chart-testing",
+   "number": 83,
+   "merged_at": 1798208992,
+   "author": 11,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798215924,
+   "repo": "helm/chart-testing",
+   "number": 84,
+   "merged_at": 1798215024,
+   "author": 6,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2,
+    3,
+    7,
+    11
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798226999,
+   "repo": "helm/chart-testing",
+   "number": 82,
+   "merged_at": 1798226099,
+   "author": 11,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2,
+    4,
+    7,
+    12
+   ],
+   "status": "capped"
+  },
+  {
+   "kind": "merge",
+   "now": 1798229694,
+   "repo": "prometheus/client_golang",
+   "number": 76,
+   "merged_at": 1798228794,
+   "author": 2,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798245687,
+   "repo": "helm/chart-testing",
+   "number": 85,
+   "merged_at": 1798244787,
+   "author": 2,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    3,
+    4,
+    8
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798340032,
+   "repo": "helm/chart-testing",
+   "number": 72,
+   "merged_at": 1797562432,
+   "author": 10,
+   "author_created_at": 1758440000,
+   "approvers": [
+    3,
+    5,
+    11,
+    12
+   ],
+   "status": "stale"
+  },
+  {
+   "kind": "merge",
+   "now": 1798370616,
+   "repo": "helm/chart-testing",
+   "number": 86,
+   "merged_at": 1798369716,
+   "author": 1,
+   "author_created_at": 1758440000,
+   "approvers": [
+    7,
+    9
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798373468,
+   "repo": "prometheus/client_golang",
+   "number": 68,
+   "merged_at": 1797595868,
+   "author": 10,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2,
+    8,
+    9,
+    12
+   ],
+   "status": "stale"
+  },
+  {
+   "kind": "merge",
+   "now": 1798391220,
+   "repo": "helm/chart-testing",
+   "number": 87,
+   "merged_at": 1798390320,
+   "author": 3,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798403585,
+   "repo": "prometheus/client_golang",
+   "number": 77,
+   "merged_at": 1798402685,
+   "author": 7,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798578327,
+   "repo": "helm/chart-testing",
+   "number": 88,
+   "merged_at": 1798577427,
+   "author": 5,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2,
+    4
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798733962,
+   "repo": "prometheus/client_golang",
+   "number": 78,
+   "merged_at": 1798733062,
+   "author": 10,
+   "author_created_at": 1758440000,
+   "approvers": [
+    5,
+    6,
+    7,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798736296,
+   "repo": "prometheus/client_golang",
+   "number": 79,
+   "merged_at": 1798735396,
+   "author": 9,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    5
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798761203,
+   "repo": "helm/chart-testing",
+   "number": 89,
+   "merged_at": 1798760303,
+   "author": 7,
+   "author_created_at": 1758440000,
+   "approvers": [
+    4
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798838541,
+   "repo": "helm/chart-testing",
+   "number": 91,
+   "merged_at": 1798837641,
+   "author": 10,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798839167,
+   "repo": "helm/chart-testing",
+   "number": 92,
+   "merged_at": 1798838267,
+   "author": 11,
+   "author_created_at": 1758440000,
+   "approvers": [
+    6,
+    10
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798842915,
+   "repo": "prometheus/client_golang",
+   "number": 80,
+   "merged_at": 1798842015,
+   "author": 10,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2,
+    6,
+    11,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798876392,
+   "repo": "helm/chart-testing",
+   "number": 95,
+   "merged_at": 1798875492,
+   "author": 5,
+   "author_created_at": 1758440000,
+   "approvers": [
+    6,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798882617,
+   "repo": "prometheus/client_golang",
+   "number": 81,
+   "merged_at": 1798881717,
+   "author": 2,
+   "author_created_at": 1758440000,
+   "approvers": [
+    4
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798891324,
+   "repo": "helm/chart-testing",
+   "number": 94,
+   "merged_at": 1798890424,
+   "author": 1,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2,
+    6,
+    10,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798971257,
+   "repo": "helm/chart-testing",
+   "number": 97,
+   "merged_at": 1798970357,
+   "author": 4,
+   "author_created_at": 1758440000,
+   "approvers": [],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798979138,
+   "repo": "helm/chart-testing",
+   "number": 96,
+   "merged_at": 1798978238,
+   "author": 2,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    6,
+    10,
+    12
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1798997559,
+   "repo": "prometheus/client_golang",
+   "number": 84,
+   "merged_at": 1798996659,
+   "author": 7,
+   "author_created_at": 1758440000,
+   "approvers": [
+    3
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1799020277,
+   "repo": "prometheus/client_golang",
+   "number": 82,
+   "merged_at": 1799019377,
+   "author": 10,
+   "author_created_at": 1758440000,
+   "approvers": [
+    1,
+    3
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "merge",
+   "now": 1799020327,
+   "repo": "prometheus/client_golang",
+   "number": 83,
+   "merged_at": 1799019427,
+   "author": 5,
+   "author_created_at": 1758440000,
+   "approvers": [
+    7,
+    10
+   ],
+   "status": "minted"
+  },
+  {
+   "kind": "eat",
+   "now": 1799047999,
+   "ids": [
+    3,
+    4,
+    6,
+    10,
+    11,
+    12
+   ]
+  },
+  {
+   "kind": "merge",
+   "now": 1799598747,
+   "repo": "helm/chart-testing",
+   "number": 90,
+   "merged_at": 1798821147,
+   "author": 5,
+   "author_created_at": 1758440000,
+   "approvers": [
+    2
+   ],
+   "status": "stale"
+  },
+  {
+   "kind": "merge",
+   "now": 1799629288,
+   "repo": "helm/chart-testing",
+   "number": 93,
+   "merged_at": 1798851688,
+   "author": 7,
+   "author_created_at": 1758440000,
+   "approvers": [
+    5
+   ],
+   "status": "stale"
+  }
+ ],
+ "expect": {
+  "supply": "827694335937499999993",
+  "minted": "3072150390625000000000",
+  "burned": "2244456054687500000007",
+  "withheld": "83210937500000000000",
+  "pot": "199707031250000008",
+  "merges_minted": 160,
+  "merges_capped": 1,
+  "merges_stale": 12,
+  "merges_young": 8,
+  "escrow": {
+   "3": "1176066080729166669",
+   "4": "183593750000000000",
+   "6": "1691284179687500003",
+   "10": "612304687499999999",
+   "11": "241536458333333333",
+   "12": "81054687500000000"
+  },
+  "linked_balances": {
+   "1": "194225423177083333328",
+   "2": "247764322916666666661",
+   "5": "179582031249999999994",
+   "7": "33492513020833333334",
+   "9": "10676432291666666664"
+  },
+  "attester_balance": "78884033203125000000"
+ }
+}
