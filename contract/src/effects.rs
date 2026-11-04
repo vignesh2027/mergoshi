@@ -2,7 +2,7 @@
 
 use crate::claim::{Claim, LinkClaim, MergeClaim, RepoClaim};
 use crate::mechanic::{self, DAY, Split, WEEK};
-use crate::{Escrow, Link, Merged, MergedExt, Part, RepoInfo, now_secs};
+use crate::{Escrow, Link, Mergoshi, MergoshiExt, Part, RepoInfo, now_secs};
 use near_sdk::json_types::U128;
 use near_sdk::{AccountId, env, near, require};
 
@@ -10,7 +10,7 @@ use near_sdk::{AccountId, env, near, require};
 const FUTURE_SLACK: u64 = 600;
 
 #[near]
-impl Merged {
+impl Mergoshi {
     /// The maintainers' feast. Once per feast period anyone may call it: the
     /// pot is split, `feast_burn_bps` of it is burned and the rest is served to
     /// the period's most active reviewers in proportion to their paid approvals.
@@ -145,7 +145,7 @@ impl Merged {
 /// Length of the windows used by the diversity cap and the exile ritual.
 pub(crate) const WINDOW: u64 = 30 * DAY;
 
-impl Merged {
+impl Mergoshi {
     pub(crate) fn settle(&mut self, key: &str, claim: Claim, quorum: &[AccountId]) -> String {
         match claim {
             Claim::Merge(m) => self.settle_merge(key, m, quorum),

@@ -1,11 +1,11 @@
 [package]
-name = "merged-token"
+name = "mergoshi-token"
 description = "Merged: an NEP-141 memecoin that mints only when pull requests are merged"
 version = "0.1.0"
 edition = "2024"
 resolver = "3"
 rust-version = "1.93"
-repository = "https://github.com/vignesh2027/merged"
+repository = "https://github.com/vignesh2027/mergoshi"
 
 [lib]
 crate-type = ["cdylib", "rlib"]

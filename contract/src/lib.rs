@@ -1,4 +1,4 @@
-//! Merged: an NEP-141 memecoin whose supply grows only when a pull request is
+//! Mergoshi: an NEP-141 memecoin whose supply grows only when a pull request is
 //! merged into a participating open source repository.
 //!
 //! A merge is proven by a fixed set of bonded attesters that commit to a hash
@@ -223,7 +223,7 @@ pub struct Stats {
 
 #[near(contract_state)]
 #[derive(PanicOnDefault)]
-pub struct Merged {
+pub struct Mergoshi {
     token: FungibleToken,
     params: Params,
     genesis_at: u64,
@@ -310,7 +310,7 @@ fn check_params(p: &Params) {
 }
 
 #[near]
-impl Merged {
+impl Mergoshi {
     /// Launches the token. Everything about it is decided here, once.
     #[init]
     pub fn new(params: Params) -> Self {
@@ -423,7 +423,7 @@ impl Merged {
     // ---- community -------------------------------------------------------
 
     /// Asks the attesters to link a GitHub account to the caller. The attesters
-    /// look for a public gist by that account containing `merged-link:<caller>`.
+    /// look for a public gist by that account containing `mergoshi-link:<caller>`.
     #[payable]
     pub fn request_link(&mut self, github_id: u64, login: String) {
         let who = env::predecessor_account_id();
@@ -612,7 +612,7 @@ impl Merged {
 // ---- NEP-141, NEP-145, NEP-148 -------------------------------------------
 
 #[near]
-impl FungibleTokenCore for Merged {
+impl FungibleTokenCore for Mergoshi {
     #[payable]
     fn ft_transfer(&mut self, receiver_id: AccountId, amount: U128, memo: Option<String>) {
         self.token.ft_transfer(receiver_id, amount, memo)
@@ -639,7 +639,7 @@ impl FungibleTokenCore for Merged {
 }
 
 #[near]
-impl FungibleTokenResolver for Merged {
+impl FungibleTokenResolver for Mergoshi {
     #[private]
     fn ft_resolve_transfer(
         &mut self,
@@ -670,7 +670,7 @@ impl FungibleTokenResolver for Merged {
 }
 
 #[near]
-impl StorageManagement for Merged {
+impl StorageManagement for Mergoshi {
     #[payable]
     fn storage_deposit(
         &mut self,
@@ -731,15 +731,15 @@ impl StorageManagement for Merged {
     }
 }
 
-const ICON: &str = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232563EB'/%3E%3Cg fill='none' stroke='%23fff' stroke-width='2.6' stroke-linecap='round'%3E%3Ccircle cx='10' cy='8' r='2.6'/%3E%3Ccircle cx='10' cy='24' r='2.6'/%3E%3Ccircle cx='22' cy='17' r='2.6' stroke='%23C4B5FD'/%3E%3Cpath d='M10 10.6v10.8M10 12c0 4 4 5 9.4 5'/%3E%3C/g%3E%3C/svg%3E";
+const ICON: &str = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='coin' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B82F6'/%3E%3Cstop offset='1' stop-color='%231D4ED8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='256' cy='256' r='244' fill='url%28%23coin%29'/%3E%3Ccircle cx='256' cy='256' r='212' fill='none' stroke='%23FFFFFF' stroke-opacity='0.28' stroke-width='6'/%3E%3Cg fill='none' stroke='%23FFFFFF' stroke-width='42' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M160 368V164'/%3E%3Cpath d='M352 368V164'/%3E%3Cpath d='M160 164C160 236 256 236 256 300'/%3E%3Cpath d='M352 164C352 236 256 236 256 300'/%3E%3Cpath d='M256 300V368'/%3E%3C/g%3E%3Ccircle cx='256' cy='300' r='34' fill='%234C1D95' stroke='%23FFFFFF' stroke-width='12'/%3E%3C/svg%3E";
 
 #[near]
-impl FungibleTokenMetadataProvider for Merged {
+impl FungibleTokenMetadataProvider for Mergoshi {
     fn ft_metadata(&self) -> FungibleTokenMetadata {
         FungibleTokenMetadata {
             spec: FT_METADATA_SPEC.to_string(),
-            name: "Merged".to_string(),
-            symbol: "MERGED".to_string(),
+            name: "Mergoshi".to_string(),
+            symbol: "MRGO".to_string(),
             icon: Some(ICON.to_string()),
             reference: None,
             reference_hash: None,
@@ -748,7 +748,7 @@ impl FungibleTokenMetadataProvider for Merged {
     }
 }
 
-impl Merged {
+impl Mergoshi {
     pub(crate) fn push_log(
         &mut self,
         kind: &str,

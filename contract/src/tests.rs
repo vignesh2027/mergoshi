@@ -54,13 +54,13 @@ fn params() -> Params {
 }
 
 struct T {
-    c: Merged,
+    c: Mergoshi,
     now: u64,
 }
 
 fn ctx(who: &str, now: u64, deposit: u128) {
     let mut b = VMContextBuilder::new();
-    b.current_account_id(acc("merged.near"))
+    b.current_account_id(acc("mergoshi.near"))
         .predecessor_account_id(acc(who))
         .signer_account_id(acc(who))
         .block_timestamp(now * 1_000_000_000)
@@ -75,14 +75,14 @@ impl T {
     }
     fn with(p: Params) -> Self {
         ctx("deployer.near", T0, 0);
-        let mut c = Merged::new(p);
+        let mut c = Mergoshi::new(p);
         for a in ["a1.near", "a2.near", "a3.near"] {
             ctx(a, T0, NEAR);
             c.bond();
         }
         T { c, now: T0 }
     }
-    fn at(&mut self, who: &str, deposit: u128) -> &mut Merged {
+    fn at(&mut self, who: &str, deposit: u128) -> &mut Mergoshi {
         ctx(who, self.now, deposit);
         &mut self.c
     }
@@ -129,7 +129,7 @@ impl T {
     fn check_books(&mut self) {
         let s = self.c.stats();
         assert_eq!(self.c.total_supply().0, s.total_minted.0 - s.total_burned.0);
-        let own = self.bal("merged.near");
+        let own = self.bal("mergoshi.near");
         assert_eq!(own, s.escrow_outstanding.0 + s.feast_pot.0);
     }
 }
@@ -159,7 +159,7 @@ fn quorum_must_be_a_majority() {
     ctx("deployer.near", T0, 0);
     let mut p = params();
     p.quorum = 1;
-    Merged::new(p);
+    Mergoshi::new(p);
 }
 
 #[test]
@@ -168,7 +168,7 @@ fn split_must_add_up() {
     ctx("deployer.near", T0, 0);
     let mut p = params();
     p.feast_bps = 600;
-    Merged::new(p);
+    Mergoshi::new(p);
 }
 
 #[test]
@@ -676,7 +676,7 @@ fn transfers_work_like_any_nep141_token() {
     t.at("vignesh.near", 1)
         .ft_transfer(acc("bob.near"), U128(10 * E18), None);
     assert_eq!(t.bal("bob.near"), 10 * E18);
-    assert_eq!(t.c.ft_metadata().symbol, "MERGED");
+    assert_eq!(t.c.ft_metadata().symbol, "MRGO");
     t.check_books();
 }
 

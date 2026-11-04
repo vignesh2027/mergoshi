@@ -63,7 +63,7 @@ func (e *Env) Must(key string) (string, error) {
 	if v := e.Get(key); v != "" {
 		return v, nil
 	}
-	return "", fmt.Errorf("%s is not set (run `merged bootstrap` first)", key)
+	return "", fmt.Errorf("%s is not set (run `mergoshi bootstrap` first)", key)
 }
 
 // Set stores a setting and rewrites the file, keeping it private to the user.
@@ -75,7 +75,7 @@ func (e *Env) Set(key, value string) error {
 	}
 	sort.Strings(keys)
 	var b strings.Builder
-	b.WriteString("# Written by merged. Holds private keys: never commit or share this file.\n")
+	b.WriteString("# Written by mergoshi. Holds private keys: never commit or share this file.\n")
 	for _, k := range keys {
 		fmt.Fprintf(&b, "%s=%s\n", k, e.file[k])
 	}

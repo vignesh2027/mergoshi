@@ -4,7 +4,7 @@
 //! first claim hash revealed by a quorum settles the round.
 
 use crate::claim::{self, Kind, NONE_HASH};
-use crate::{Merged, MergedExt, Round, now_secs};
+use crate::{Mergoshi, MergoshiExt, Round, now_secs};
 use near_sdk::json_types::U128;
 use near_sdk::{AccountId, NearToken, Promise, env, near};
 
@@ -39,7 +39,7 @@ pub struct RoundView {
 pub(crate) const DONE_SETTLED: u8 = 1;
 
 #[near]
-impl Merged {
+impl Mergoshi {
     /// Commits to claims. Items that cannot be committed are skipped and the
     /// reason is returned in the same position, so one bad item never sinks a batch.
     pub fn commit(&mut self, items: Vec<CommitItem>) -> Vec<String> {
@@ -121,7 +121,7 @@ impl Merged {
     }
 }
 
-impl Merged {
+impl Mergoshi {
     fn commit_deadline(&self, r: &Round) -> u64 {
         r.opened_at + self.params.commit_window_secs
     }

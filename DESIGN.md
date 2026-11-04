@@ -1,12 +1,12 @@
-# Merged: design
+# Mergoshi: design
 
-Merged is an NEP-141 memecoin on NEAR whose supply grows only when real work lands: a pull request merged into a participating open source repository. Every rule lives in the token contract. There is no owner, no admin method and no backend that can mint; a small bonded set of attesters can only report what GitHub shows, and they are paid when they agree and slashed when they do not.
+Mergoshi is an NEP-141 memecoin on NEAR whose supply grows only when real work lands: a pull request merged into a participating open source repository. Every rule lives in the token contract. There is no owner, no admin method and no backend that can mint; a small bonded set of attesters can only report what GitHub shows, and they are paid when they agree and slashed when they do not.
 
-Track: **Memecoins With Mechanics**. The brief asks for a meme that does something, with the mechanic in the contract, parameters fixed at launch, plain sybil limits, a page with live state and a mint and burn log, and a simulation before choosing parameters. Merged was designed against that list item by item. It also touches the social track (programmable rewards, contributor reputation), but its centre is supply mechanics, so it is entered in memecoins only.
+Track: **Memecoins With Mechanics**. The brief asks for a meme that does something, with the mechanic in the contract, parameters fixed at launch, plain sybil limits, a page with live state and a mint and burn log, and a simulation before choosing parameters. Mergoshi was designed against that list item by item. It also touches the social track (programmable rewards, contributor reputation), but its centre is supply mechanics, so it is entered in memecoins only.
 
 ## 1. The mechanic in one paragraph
 
-When a pull request is merged into an enrolled repository, three attesters each read it from the public GitHub API, write the same canonical claim, and commit to its hash. After the commit window they reveal. The moment two of them reveal the same claim, the contract mints 100 MERGED (halving every 10 000 merges) and splits it: 70 to the author, 20 shared by up to three approving reviewers (the **LGTM tax**), 5 to the two attesters that settled it, 5 to the **feast pot**. A merge nobody approved never mints its review share. Authors who merge in consecutive weeks earn a **streak** bonus of 10 percent per week, up to 40 percent. Contributors who have not linked a NEAR account have their coins held in **escrow**; if they do not link within 60 days of their first unclaimed coin, the escrow is burned. Every 30 days anyone can call the **maintainers' feast**: half the pot is burned and half is served to the period's most active reviewers. Holders can **exile** a repository that farms coins by burning as much as it minted over the last two windows.
+When a pull request is merged into an enrolled repository, three attesters each read it from the public GitHub API, write the same canonical claim, and commit to its hash. After the commit window they reveal. The moment two of them reveal the same claim, the contract mints 100 MRGO (halving every 10 000 merges) and splits it: 70 to the author, 20 shared by up to three approving reviewers (the **LGTM tax**), 5 to the two attesters that settled it, 5 to the **feast pot**. A merge nobody approved never mints its review share. Authors who merge in consecutive weeks earn a **streak** bonus of 10 percent per week, up to 40 percent. Contributors who have not linked a NEAR account have their coins held in **escrow**; if they do not link within 60 days of their first unclaimed coin, the escrow is burned. Every 30 days anyone can call the **maintainers' feast**: half the pot is burned and half is served to the period's most active reviewers. Holders can **exile** a repository that farms coins by burning as much as it minted over the last two windows.
 
 ## 2. Why this is a meme that does something
 
@@ -17,12 +17,12 @@ When a pull request is merged into an enrolled repository, three attesters each 
 | Streaks | Ship every week to grow your multiplier; miss a week and it resets. |
 | Escrow with a 60-day fuse | Your merged PRs already earned coins. Link your GitHub before they burn. |
 | Maintainers' feast | Monthly ritual: half the pot burns, half feeds the reviewers who kept the lights on. |
-| Repo offering | Bringing a new repository in costs a 500 MERGED burn, kept whether or not it qualifies. |
+| Repo offering | Bringing a new repository in costs a 500 MRGO burn, kept whether or not it qualifies. |
 | Exile | Holders can banish a farm, but only by burning as much as it took. |
 
 ## 3. Proving a merge on chain
 
-A NEAR contract cannot call GitHub, and a GitHub webhook is signed with a repository secret that the contract cannot check. Merged therefore uses a small, fixed, bonded oracle set with commit and reveal.
+A NEAR contract cannot call GitHub, and a GitHub webhook is signed with a repository secret that the contract cannot check. Mergoshi therefore uses a small, fixed, bonded oracle set with commit and reveal.
 
 **Claims.** Every fact is a canonical text claim: fields joined by a newline, no trailing newline, lower case repository names, unix seconds, numeric GitHub ids (stable across renames). Two attesters can only agree if they wrote byte-identical text. The contract parses and refuses anything non-canonical.
 
@@ -44,7 +44,7 @@ Commit and reveal also stops lazy attesters from waiting for one honest attester
 
 **What attesters may open.** A merge round only for an enrolled repository, a link round only for an on-chain link request, a repo round only for an on-chain proposal. The contract never accepts an arbitrary key.
 
-**Linking a GitHub account.** The NEAR account calls `request_link(github_id, login)` with a small storage deposit. The contributor publishes a public gist containing `merged-link:<near account>`. Attesters check the gist and the account age and attest the link claim. Both sides consented: the NEAR account by signing, the GitHub account by publishing.
+**Linking a GitHub account.** The NEAR account calls `request_link(github_id, login)` with a small storage deposit. The contributor publishes a public gist containing `mergoshi-link:<near account>`. Attesters check the gist and the account age and attest the link claim. Both sides consented: the NEAR account by signing, the GitHub account by publishing.
 
 ## 4. Threat model for minting
 
@@ -58,9 +58,9 @@ Security assumption: **fewer than a quorum of attesters collude**. Liveness assu
 | Double mint of one merge | Settled keys are recorded and refused | none |
 | Bots | Attesters skip `[bot]` and `Bot` accounts | A bot running on a human account looks human |
 | Throwaway GitHub accounts | Authors younger than 90 days mint nothing and do not count toward diversity; links need 90 days too | Aged accounts can be bought |
-| Repository farming | Diversity cap: a repository mints at most 1 + (distinct aged authors this or last 30-day window) / 3 merges a day, never more than 12; each author at most 4 a day; new repositories need 100 stars, 180 days and a 500 MERGED burn; holders can exile a farm | **An attacker who controls an eligible repository and several aged accounts can farm up to its cap until someone exiles it.** The simulation measures this: about 25 percent of supply after two years if nobody reacts, about 8 percent if holders exile each farm three weeks after it starts |
+| Repository farming | Diversity cap: a repository mints at most 1 + (distinct aged authors this or last 30-day window) / 3 merges a day, never more than 12; each author at most 4 a day; new repositories need 100 stars, 180 days and a 500 MRGO burn; holders can exile a farm | **An attacker who controls an eligible repository and several aged accounts can farm up to its cap until someone exiles it.** The simulation measures this: about 25 percent of supply after two years if nobody reacts, about 8 percent if holders exile each farm three weeks after it starts |
 | Self-approval rings | The author is never an approver; unreviewed merges mint 20 percent less | Puppets can approve each other; the diversity cap and exile bound the damage |
-| Exile griefing | Exiling costs as much as the repository minted over two windows, at least 1 000 MERGED, burned | A rich holder can exile a small honest repository. Cost scales with the repository's own output |
+| Exile griefing | Exiling costs as much as the repository minted over two windows, at least 1 000 MRGO, burned | A rich holder can exile a small honest repository. Cost scales with the repository's own output |
 
 Out of scope, by design: changing any parameter, removing an attester, delisting a repository other than by exile, or recovering coins. There is no admin key to do any of it.
 
@@ -74,7 +74,7 @@ All parameters are set in `new(params)` and readable with `params()`. Values for
 | bond | 50 NEAR | 0.2 NEAR | testnet budget |
 | commit, reveal window | 10 min, 20 min | 30 s, 60 s | demo speed |
 | slash | 20 percent of bond | same | painful but survivable for an honest bug |
-| base reward, halving | 100 MERGED, every 10 000 merges | same | asymptotic cap below 2.8 million MERGED (2 x 100 x 10 000 x 1.4 streak) |
+| base reward, halving | 100 MRGO, every 10 000 merges | same | asymptotic cap below 2.8 million MRGO (2 x 100 x 10 000 x 1.4 streak) |
 | split author, review, attester, feast | 70, 20, 5, 5 | same | author first; review share large enough to matter |
 | paid reviewers | 3 | same | real PRs: 1 approval in 53 percent, 2 in 33 percent of the sample |
 | streak | +10 percent a week, max +40 | same | rewards rhythm without letting veterans dominate |
@@ -83,8 +83,8 @@ All parameters are set in `new(params)` and readable with `params()`. Values for
 | max merge age | 7 days | 21 days | testnet launch picks up recent real merges |
 | min GitHub account age | 90 days | same | throwaway accounts |
 | repo eligibility | 100 stars, 180 days, not a fork | same | |
-| repo offering | 500 MERGED | same | spam cost, burned |
-| exile minimum | 1 000 MERGED | same | |
+| repo offering | 500 MRGO | same | spam cost, burned |
+| exile minimum | 1 000 MRGO | same | |
 | feast | every 30 days, burn 50 percent, 20 guests | every 6 hours | |
 | escrow fuse | 60 days from first unclaimed coin | 7 days | pushes contributors to link; bounds escrow |
 
@@ -122,7 +122,7 @@ What the runs show:
 ![Cap sweep](sim/out/cap_sweep.svg)
 ![Farmer share](sim/out/farm_attacker_share.svg)
 
-Run it yourself: `python3 sim/run.py` (about five seconds) rewrites `sim/out/`. `merged snapshot` refetches the GitHub data without a token.
+Run it yourself: `python3 sim/run.py` (about five seconds) rewrites `sim/out/`. `mergoshi snapshot` refetches the GitHub data without a token.
 
 Modelling limits: one seed per scenario; new repositories reuse genesis repositories' activity profiles; link adoption is an assumption; the farmer is a fixed strategy, not an optimiser.
 
@@ -148,7 +148,7 @@ Go, no third-party modules:
 
 * `merged attest`: an attester loop. Polls the GitHub search API for merges in enrolled repositories, builds canonical claims, commits in batches, reveals, sweeps, and votes `null` on open rounds it cannot confirm. Each attester has its own key and runs separately.
 * `merged serve`: server-rendered dashboard (html/template, one tiny inline script for auto refresh) with supply, repositories and caps, attesters, open rounds, escrow, the feast countdown and the full mint and burn log.
-* `merged bootstrap`: creates one root account through the public testnet helper, attester sub-accounts, deploys and launches the token. Idempotent.
+* `mergoshi bootstrap`: creates one root account through the public testnet helper, attester sub-accounts, deploys and launches the token. Idempotent.
 * `merged local`: one command for judges. Starts a near-sandbox node, a local fake GitHub that serves the recorded snapshot and lets you merge a pull request with a button, three attesters and the dashboard.
 
 ## 9. Demo script (two minutes)
@@ -160,3 +160,24 @@ Go, no third-party modules:
 5. 1:20 Rituals: link a GitHub account and watch its escrow release; trigger the feast (half burned, half to reviewers); exile a farming repository.
 6. 1:40 The simulation charts: supply under five scenarios and the farmer's share with and without exile.
 7. 1:55 Close: parameters page, every rule fixed at launch.
+
+## 10. Name and logo
+
+The working name was "Merged". A search on 4 November 2026 showed it collides: the App Store lists apps called "Merged" and "Merged@", CoinGecko lists several "Merged" bridged tokens (zkLink Nova Merged USDT, ETH, DAI, USDC), and tokens named Merge (MERGE) and MERG already trade. It is also an everyday git word, so it could never be found in a search.
+
+The project is therefore called **Mergoshi** (a merge plus the familiar meme suffix), ticker **MRGO**. Evidence gathered on 4 November 2026:
+
+| Where | Query | Result |
+|---|---|---|
+| GitHub repository search | `mergoshi in:name` | 0 repositories |
+| CoinGecko search API | `mergoshi`, `mrgo` | no coins |
+| CoinPaprika search API | `mergoshi` | no currencies |
+| NEAR token list (NearBlocks FT search) | `mergoshi`, `mrgo` | no tokens |
+| NEAR accounts | `mergoshi.near`, `mergoshi.testnet` | do not exist |
+| App Store (iTunes search API) | `mergoshi` | no app of that name |
+| Google Play, CoinMarketCap, the web | web search for "Mergoshi" | no product, company, token or app; only unrelated place names (Mergoscia, Morgaushi) |
+| Package registries | npm, PyPI, crates.io | name not taken |
+
+Candidates that were rejected: Pullmint (a GitHub repository "Pullmint" already does pull request analysis, and the ticker PMINT is taken), Mergeling (Mergelings games on the App Store), Lgtmo (LGTMoon tools on GitHub). No trademark database search was run; the web and store searches found no registered use.
+
+The logo (`assets/logo.svg`, `assets/logo-512.png`) is original: a blue coin whose white M has its two middle strokes merging into one stem, tied by a deep violet knot. It uses only the project palette (#2563EB, #1D4ED8, #3B82F6, white, #4C1D95) and borrows no shape from GitHub's, NEAR's or any coin's mark.

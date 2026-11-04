@@ -74,7 +74,7 @@ def main():
 
     (out / "supply_by_scenario.svg").write_text(svg.line_chart(
         [(SCENARIOS[k].name.replace("_", ", "), tokens(v.supply)) for k, v in results.items()],
-        "MERGED supply over two years, five scenarios",
+        "MRGO supply over two years, five scenarios",
         "Real merge rates from 10 repositories, chosen launch parameters, one seed",
         ylabel="tokens in circulation",
     ))

@@ -63,7 +63,7 @@ func (c *Client) get(ctx context.Context, path string, out any) error {
 			return err
 		}
 		req.Header.Set("Accept", "application/vnd.github+json")
-		req.Header.Set("User-Agent", "merged-attester")
+		req.Header.Set("User-Agent", "mergoshi-attester")
 		req.Header.Set("X-GitHub-Api-Version", "2022-11-28")
 		if c.Token != "" {
 			req.Header.Set("Authorization", "Bearer "+c.Token)
@@ -214,9 +214,11 @@ func (c *Client) Pull(ctx context.Context, repo string, number int) (*PullReques
 	return &pr, nil
 }
 
-// Approvers returns the accounts whose latest review on the pull request is an
-// approval, sorted by account id. The author is never counted.
-func (c *Client) Approvers(ctx context.Context, repo string, number int, authorID int64) ([]User, error) {
+// Approvers returns the accounts whose latest review submitted at or before
+// `cutoff` (the merge time) is an approval, sorted by account id. Reviews after
+// the merge are ignored so every attester sees the same set. The author is
+// never counted.
+func (c *Client) Approvers(ctx context.Context, repo string, number int, authorID int64, cutoff time.Time) ([]User, error) {
 	type review struct {
 		User        User      `json:"user"`
 		State       string    `json:"state"`
@@ -230,7 +232,7 @@ func (c *Client) Approvers(ctx context.Context, repo string, number int, authorI
 		}
 		for _, r := range rs {
 			// Comments do not change an earlier approval or rejection.
-			if r.State == "COMMENTED" || r.State == "PENDING" {
+			if r.State == "COMMENTED" || r.State == "PENDING" || r.SubmittedAt.After(cutoff) {
 				continue
 			}
 			if prev, ok := latest[r.User.ID]; !ok || !r.SubmittedAt.Before(prev.SubmittedAt) {
@@ -329,7 +331,7 @@ func (c *Client) raw(ctx context.Context, u string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	req.Header.Set("User-Agent", "merged-attester")
+	req.Header.Set("User-Agent", "mergoshi-attester")
 	resp, err := c.HTTP.Do(req)
 	if err != nil {
 		return "", err
@@ -376,5 +378,66 @@ func (c *Client) SearchOwnerMerges(ctx context.Context, login string) ([]MergeSu
 		}
 	}
 	sort.Slice(out, func(i, j int) bool { return out[i].MergedAt.Before(out[j].MergedAt) })
+	return out, nil
+}
+
+// SearchMergedMulti lists pull requests merged at or after `since` into any of
+// repos, newest first. Repositories are grouped so each query stays under the
+// search API's 256 character limit.
+func (c *Client) SearchMergedMulti(ctx context.Context, repos []string, since time.Time) ([]MergeSummary, error) {
+	base := "is:pr is:merged merged:>=" + since.UTC().Format(time.RFC3339)
+	var groups [][]string
+	var cur []string
+	size := len(base)
+	for _, r := range repos {
+		add := len(" repo:") + len(r)
+		if len(cur) > 0 && size+add > 250 {
+			groups = append(groups, cur)
+			cur, size = nil, len(base)
+		}
+		cur = append(cur, r)
+		size += add
+	}
+	if len(cur) > 0 {
+		groups = append(groups, cur)
+	}
+	var out []MergeSummary
+	for _, g := range groups {
+		q := base
+		for _, r := range g {
+			q += " repo:" + r
+		}
+		for page := 1; page <= 10; page++ {
+			if err := c.waitSearch(ctx); err != nil {
+				return out, err
+			}
+			var res struct {
+				Total int `json:"total_count"`
+				Items []struct {
+					Number        int    `json:"number"`
+					RepositoryURL string `json:"repository_url"`
+					User          User   `json:"user"`
+					PullRequest   struct {
+						MergedAt *time.Time `json:"merged_at"`
+					} `json:"pull_request"`
+				} `json:"items"`
+			}
+			path := "/search/issues?per_page=100&sort=updated&order=desc&page=" + strconv.Itoa(page) + "&q=" + url.QueryEscape(q)
+			if err := c.get(ctx, path, &res); err != nil {
+				return out, err
+			}
+			for _, it := range res.Items {
+				if it.PullRequest.MergedAt == nil {
+					continue
+				}
+				_, repo, _ := strings.Cut(it.RepositoryURL, "/repos/")
+				out = append(out, MergeSummary{Repo: repo, Number: it.Number, MergedAt: it.PullRequest.MergedAt.UTC(), Author: it.User})
+			}
+			if len(res.Items) < 100 || page*100 >= res.Total {
+				break
+			}
+		}
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].MergedAt.After(out[j].MergedAt) })
 	return out, nil
 }

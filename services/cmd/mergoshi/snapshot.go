@@ -9,7 +9,7 @@ import (
 	"sort"
 	"time"
 
-	"merged/internal/github"
+	"mergoshi/internal/github"
 )
 
 // DefaultRepos are the genesis repositories: projects the author has merged work into.
@@ -66,7 +66,7 @@ func runSnapshot(ctx context.Context, gh *github.Client, out string, days int, o
 	to := time.Now().UTC().Truncate(24 * time.Hour)
 	from := to.AddDate(0, 0, -days)
 	snap := snapshot{
-		Note:      "Public merged pull request history used by sim/. Built by `merged snapshot`.",
+		Note:      "Public merged pull request history used by sim/. Built by `mergoshi snapshot`.",
 		FetchedAt: time.Now().UTC().Truncate(time.Second),
 		From:      from, To: to, Logins: map[int64]string{}, Owner: owner,
 	}
@@ -122,7 +122,7 @@ func runSnapshot(ctx context.Context, gh *github.Client, out string, days int, o
 		step := max(n/reviewSample, 1)
 		for i := 0; i < n && len(snap.Reviews) < reviewSample; i += step {
 			c := candidates[i]
-			apps, err := gh.Approvers(ctx, c.repo, c.number, c.author)
+			apps, err := gh.Approvers(ctx, c.repo, c.number, c.author, time.Now().Add(24*time.Hour))
 			if err != nil {
 				fmt.Println("reviews sample stopped early:", err)
 				break
