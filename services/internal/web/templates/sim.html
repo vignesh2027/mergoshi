@@ -1,0 +1,11 @@
+{{define "body"}}
+<section class="card wide">
+  <h2>Simulation <small>two simulated years driven by 90 days of real merge history</small></h2>
+  <p>The parameters were chosen by simulating community behaviour first. Each enrolled repository draws its daily merges from its own real history; authors and approvals come from real pull requests. The Python model applies the same integer rules as the contract, and a golden test replays 195 events through both and requires identical totals. Run it with <code>python3 sim/run.py</code>.</p>
+  <figure><img src="/sim/supply_by_scenario.svg" alt="Supply over two years in five scenarios"></figure>
+  <figure><img src="/sim/flows_steady.svg" alt="Minted, burned, escrow and withheld in the steady scenario"></figure>
+  <figure><img src="/sim/farm_attacker_share.svg" alt="Farmer share of supply with no caps, caps only, and caps with exile"></figure>
+  <figure><img src="/sim/cap_sweep.svg" alt="Honest coverage and farmer share against authors per slot"></figure>
+  <figure><img src="/sim/drought_flows.svg" alt="Supply, burns and escrow in the drought scenario"></figure>
+</section>
+{{end}}

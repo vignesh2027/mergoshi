@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{{if or (eq .Active "home") (eq .Active "ledger")}}<meta http-equiv="refresh" content="20">{{end}}
+<title>{{.Title}} · MRGO</title>
+<link rel="icon" href="/static/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/mergoshi.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/"><img src="/static/logo.svg" alt="" width="34" height="34"><span>Mergoshi</span><em>MRGO</em></a>
+  <nav>
+    <a href="/" {{if eq .Active "home"}}class="on"{{end}}>Live</a>
+    <a href="/ledger" {{if eq .Active "ledger"}}class="on"{{end}}>Ledger</a>
+    <a href="/escrow" {{if eq .Active "escrow"}}class="on"{{end}}>Escrow</a>
+    <a href="/params" {{if eq .Active "params"}}class="on"{{end}}>Rules</a>
+    <a href="/sim" {{if eq .Active "sim"}}class="on"{{end}}>Simulation</a>
+    <a href="/join" {{if eq .Active "join"}}class="on"{{end}}>Claim</a>
+    {{range .Extra}}<a href="{{.Href}}" class="extra">{{.Label}}</a>{{end}}
+  </nav>
+  <span class="net net-{{.Network}}">{{.Network}}</span>
+</header>
+<main>
+{{template "body" .}}
+</main>
+<footer>
+  <p>Token contract <code>{{.Token}}</code>. Every number on this site is read from the contract; nothing here can mint.</p>
+</footer>
+</body>
+</html>

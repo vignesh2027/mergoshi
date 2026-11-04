@@ -1,0 +1,35 @@
+{{define "body"}}{{$p := .S.Params}}
+<section class="card wide">
+  <h2>Rules <small>fixed in <code>new(params)</code> at launch; the contract has no method that changes them</small></h2>
+  <div class="rules">
+  <div><h3>Attestation</h3><dl>
+    <dt>Attesters</dt><dd>{{range $p.Attesters}}{{account .}}<br>{{end}}</dd>
+    <dt>Quorum</dt><dd>{{$p.Quorum}} matching reveals</dd>
+    <dt>Bond</dt><dd>{{near $p.Bond}} NEAR each</dd>
+    <dt>Commit window, reveal window</dt><dd>{{days $p.CommitWindowSecs}}, {{days $p.RevealWindowSecs}}</dd>
+    <dt>Slash for a dissenting reveal</dt><dd>{{pct $p.SlashBps}} of the bond</dd>
+  </dl></div>
+  <div><h3>Minting</h3><dl>
+    <dt>Reward per merge</dt><dd>{{tok $p.BaseReward}} MRGO, halving every {{$p.HalvingEvery}} merges</dd>
+    <dt>Split</dt><dd>author {{pct $p.AuthorBps}}, reviewers {{pct $p.ReviewBps}}, attesters {{pct $p.AttesterBps}}, feast pot {{pct $p.FeastBps}}</dd>
+    <dt>Paid reviewers</dt><dd>up to {{$p.MaxPaidReviewers}}; no approval, no review share</dd>
+    <dt>Streak</dt><dd>+{{pct $p.StreakStepBps}} per consecutive week, up to +{{pct $p.StreakMaxBonusBps}}</dd>
+    <dt>Merge window</dt><dd>merges older than {{days $p.MaxMergeAgeSecs}} mint nothing</dd>
+  </dl></div>
+  <div><h3>Sybil limits</h3><dl>
+    <dt>Repository daily cap</dt><dd>{{$p.RepoFloor}} + one per {{$p.AuthorsPerSlot}} distinct aged authors, at most {{$p.RepoDailyCap}}</dd>
+    <dt>Author daily cap</dt><dd>{{$p.AuthorDailyCap}}</dd>
+    <dt>GitHub account age</dt><dd>{{$p.MinGitHubAgeDays}} days to mint or link</dd>
+    <dt>New repositories</dt><dd>{{$p.MinRepoStars}} stars, {{$p.MinRepoAgeDays}} days old, not a fork, {{tok $p.RepoEnrollBurn}} MRGO offering burned</dd>
+    <dt>Exile</dt><dd>burn as much as the repository minted in two windows, at least {{tok $p.ExileMin}} MRGO</dd>
+  </dl></div>
+  <div><h3>Treasury rituals</h3><dl>
+    <dt>Feast</dt><dd>every {{days $p.FeastPeriodSecs}}: {{pct $p.FeastBurnBps}} of the pot burned, the rest to the {{$p.FeastMaxGuests}} busiest reviewers</dd>
+    <dt>Escrow fuse</dt><dd>{{days $p.EscrowTTLSecs}} from the first unclaimed coin</dd>
+    <dt>Request deposit</dt><dd>{{near $p.RequestDeposit}} NEAR for a link request or repository proposal</dd>
+  </dl></div>
+  </div>
+  <h3>Genesis repositories</h3>
+  <p>{{range $p.GenesisRepos}}<code>{{.}}</code> {{end}}</p>
+</section>
+{{end}}

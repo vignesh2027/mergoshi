@@ -1,0 +1,11 @@
+{{define "body"}}{{$s := .S}}
+<section class="card wide">
+  <h2>Escrow <small>coins earned by GitHub accounts that have not linked a NEAR account yet</small></h2>
+  <p>When a contributor who has not linked merges or approves, their share is minted to the contract and held for their GitHub id. Linking releases all of it at once. If they have not linked {{days $s.Params.EscrowTTLSecs}} after their first unclaimed coin, anyone may burn it. <a href="/join">How to claim</a>.</p>
+  {{if not $s.Escrows}}<p class="muted">No escrow right now.</p>{{end}}
+  <table class="t">
+    <tr><th>GitHub</th><th>Held</th><th>First coin</th><th>Burns</th></tr>
+    {{range $s.Escrows}}<tr><td><a href="https://github.com/{{.Login}}" target="_blank" rel="noopener">{{.Login}}</a> <span class="muted small">id {{.GitHubID}}</span></td><td>{{tok .Amount}} MRGO</td><td>{{when .Since}}</td><td>{{when (add .Since $s.Params.EscrowTTLSecs)}}</td></tr>{{end}}
+  </table>
+</section>
+{{end}}

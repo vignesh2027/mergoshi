@@ -23,6 +23,7 @@ commands:
   status     print supply, counters and attesters
   attest     run the attesters (flags: -which 1,2,3  -only key,key  -every 20s  -until-settled)
   local      run a sandbox node, the token, three attesters and the dashboard on this machine
+  serve      run the dashboard (flags: -addr :8080  -attesters)
   snapshot   record public merge history for the simulation (sim/data/snapshot.json)
 `
 
@@ -40,7 +41,7 @@ func main() {
 		envPath = ".env"
 	}
 	switch cmd {
-	case "bootstrap", "status", "attest":
+	case "bootstrap", "status", "attest", "serve":
 		a, lerr := loadApp(envPath)
 		if lerr != nil {
 			err = lerr
@@ -51,6 +52,12 @@ func main() {
 			err = a.bootstrap(ctx)
 		case "status":
 			err = a.status(ctx)
+		case "serve":
+			fs := flag.NewFlagSet(cmd, flag.ExitOnError)
+			addr := fs.String("addr", ":"+a.env.Or("PORT", "8080"), "listen address")
+			withAttesters := fs.Bool("attesters", false, "also run the three attesters in this process")
+			_ = fs.Parse(args)
+			err = a.serve(ctx, *addr, "testnet", *withAttesters, nil)
 		case "attest":
 			fs := flag.NewFlagSet(cmd, flag.ExitOnError)
 			which := fs.String("which", "1,2,3", "attester numbers to run in this process")

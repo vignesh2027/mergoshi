@@ -1,0 +1,67 @@
+{{define "body"}}{{$s := .S}}
+<section class="hero">
+  <div>
+    <p class="eyebrow">A memecoin that only mints when code ships</p>
+    <h1>{{tok $s.Supply}} <span class="unit">MRGO</span></h1>
+    <p class="sub">in circulation, from {{$s.Stats.MergesMinted}} merged pull requests across {{len $s.Repos}} repositories. Launched {{ago $s.GenesisAt.Unix}}.</p>
+  </div>
+  <div class="feast {{if $s.FeastReady}}ready{{end}}">
+    <p class="eyebrow">Maintainers' feast</p>
+    <p class="big">{{tok $s.Stats.FeastPot}} <span class="unit">MRGO</span></p>
+    <p class="small">{{if $s.FeastReady}}The table is set: anyone can call the feast now.{{else}}Next feast {{until $s.NextFeast}}.{{end}} Half burns, half feeds the {{$s.Params.FeastMaxGuests}} busiest reviewers.</p>
+  </div>
+</section>
+
+<section class="stats">
+  <div><span>Minted</span><b>{{tok $s.Stats.TotalMinted}}</b></div>
+  <div class="burn"><span>Burned</span><b>{{tok $s.Stats.TotalBurned}}</b></div>
+  <div><span>Waiting in escrow</span><b>{{tok $s.Stats.EscrowOutstanding}}</b></div>
+  <div><span>Never minted (no LGTM)</span><b>{{tok $s.Stats.Withheld}}</b></div>
+  <div><span>Capped, stale, young</span><b>{{$s.Stats.MergesCapped}} · {{$s.Stats.MergesStale}} · {{$s.Stats.MergesYoung}}</b></div>
+  <div><span>Linked contributors</span><b>{{$s.Stats.Links}}</b></div>
+</section>
+
+<div class="grid">
+<section class="card">
+  <h2>Ledger <a class="more" href="/ledger">all {{$s.LogLen}} entries</a></h2>
+  {{if not $s.Recent}}<p class="muted">Nothing yet. The first merge an attester quorum confirms will appear here.</p>{{end}}
+  <ol class="log">
+  {{range $s.Recent}}{{template "entry" .}}{{end}}
+  </ol>
+</section>
+
+<aside>
+<section class="card">
+  <h2>Attesters <small>{{$s.Params.Quorum}} of {{len $s.Attesters}} must agree</small></h2>
+  <table class="t">
+    <tr><th>Account</th><th>Bond</th><th>Settled</th><th>Slashed</th></tr>
+    {{range $s.Attesters}}<tr><td>{{account .ID}} {{if not .Active}}<span class="tag bad">inactive</span>{{end}}</td><td>{{near .Bond}} N</td><td>{{.Settled}}</td><td>{{if .Slashes}}<span class="tag bad">{{.Slashes}}</span>{{else}}0{{end}}</td></tr>{{end}}
+  </table>
+</section>
+
+<section class="card">
+  <h2>Open rounds <small>commit, then reveal</small></h2>
+  {{if not $s.Rounds}}<p class="muted">No round is open.</p>{{end}}
+  {{range $s.Rounds}}<div class="round">
+    <p>{{keylink .Key}}</p>
+    <p class="small">{{len .Committed}} committed, {{len .Revealed}} revealed{{if .Result}}, <b>{{.Result}}</b>{{end}}. Reveal closes {{when .RevealDeadline}}.</p>
+  </div>{{end}}
+</section>
+
+<section class="card">
+  <h2>Repositories <small>merges minted today of today's cap</small></h2>
+  <table class="t">
+  {{range $s.Repos}}<tr><td><a href="https://github.com/{{.Name}}" target="_blank" rel="noopener">{{.Name}}</a>{{if not .Genesis}} <span class="tag">joined</span>{{end}}</td><td class="cap {{if .CapFull}}full{{end}}">{{.Today}} / {{.Cap}}</td></tr>{{end}}
+  </table>
+  <p class="small muted">The cap grows by one for every {{$s.Params.AuthorsPerSlot}} distinct aged authors a repository had this month or last, up to {{$s.Params.RepoDailyCap}}.</p>
+</section>
+</aside>
+</div>
+{{end}}
+
+{{define "entry"}}<li class="{{kindclass .Kind}}">
+  <div class="row"><span class="kind">{{.Kind}}</span><span class="key">{{keylink .Key}}</span><span class="t">{{ago .At}}</span></div>
+  {{if .Note}}<p class="note">{{.Note}}</p>{{end}}
+  {{if or (ismint .) (isburn .)}}<p class="amt">{{if ismint .}}<b class="m">+{{tok .Minted}}</b>{{end}}{{if isburn .}} <b class="b">-{{tok .Burned}}</b>{{end}} MRGO</p>{{end}}
+  {{if .Parts}}<ul class="parts">{{range .Parts}}<li><span>{{.Role}}</span>{{account .To}}<b>{{if eq .Role "honest attester (yoctoNEAR)"}}{{near .Amount}} NEAR{{else}}{{tok .Amount}}{{end}}</b></li>{{end}}</ul>{{end}}
+</li>{{end}}

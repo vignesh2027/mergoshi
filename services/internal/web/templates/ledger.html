@@ -1,0 +1,16 @@
+{{define "body"}}{{$l := .Data}}
+<section class="card wide">
+  <h2>Ledger <small>every mint, burn, slash and link, read from the contract's own log</small></h2>
+  <p class="filters"><a href="/ledger" {{if eq $l.Kind ""}}class="on"{{end}}>Everything</a><a href="/ledger?kind=mint" {{if eq $l.Kind "mint"}}class="on"{{end}}>Mints</a><a href="/ledger?kind=burn" {{if eq $l.Kind "burn"}}class="on"{{end}}>Burns</a></p>
+  <p class="small muted">Entries {{$l.From}} to {{sub $l.To 1}}, newest first. The same data is in the view method <code>log(from_index, limit)</code>, and every mint and burn is also a standard NEP-141 <code>ft_mint</code> or <code>ft_burn</code> event.</p>
+  {{if not $l.Entries}}<p class="muted">Nothing here yet.</p>{{end}}
+  <ol class="log">{{range $l.Entries}}{{template "entry" .}}{{end}}</ol>
+  <p class="pager">{{if $l.HasNewer}}<a href="/ledger?before={{$l.Newer}}&kind={{$l.Kind}}">Newer</a>{{end}} {{if $l.HasOlder}}<a href="/ledger?before={{$l.Older}}&kind={{$l.Kind}}">Older</a>{{end}}</p>
+</section>
+{{end}}
+{{define "entry"}}<li class="{{kindclass .Kind}}">
+  <div class="row"><span class="kind">{{.Kind}}</span><span class="key">{{keylink .Key}}</span><span class="t">{{when .At}}</span></div>
+  {{if .Note}}<p class="note">{{.Note}}</p>{{end}}
+  {{if or (ismint .) (isburn .)}}<p class="amt">{{if ismint .}}<b class="m">+{{tok .Minted}}</b>{{end}}{{if isburn .}} <b class="b">-{{tok .Burned}}</b>{{end}} MRGO</p>{{end}}
+  {{if .Parts}}<ul class="parts">{{range .Parts}}<li><span>{{.Role}}</span>{{account .To}}<b>{{if eq .Role "honest attester (yoctoNEAR)"}}{{near .Amount}} NEAR{{else}}{{tok .Amount}}{{end}}</b></li>{{end}}</ul>{{end}}
+</li>{{end}}

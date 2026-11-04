@@ -1,0 +1,14 @@
+{{define "body"}}{{$p := .S.Params}}
+<section class="card wide">
+  <h2>Claim your coins</h2>
+  <p>If you have merged a pull request into one of the repositories on the <a href="/">live page</a> in the last {{days $p.MaxMergeAgeSecs}}, your share may already be waiting in <a href="/escrow">escrow</a>. Linking takes two steps and needs no one's permission.</p>
+  <ol class="steps">
+    <li><b>Publish a public gist</b> from your GitHub account containing exactly <code>mergoshi-link:&lt;your NEAR account&gt;</code>. Your GitHub account must be at least {{$p.MinGitHubAgeDays}} days old.</li>
+    <li><b>Ask the contract</b> from your NEAR account, attaching {{near $p.RequestDeposit}} NEAR for storage:
+      <pre>near contract call-function as-transaction {{.Token}} request_link json-args '{"github_id": YOUR_NUMERIC_ID, "login": "YOUR_LOGIN"}' prepaid-gas '30 Tgas' attached-deposit '0.01 NEAR' sign-as YOUR_ACCOUNT network-config testnet sign-with-keychain send</pre>
+      Your numeric id is the <code>id</code> field at <code>https://api.github.com/users/YOUR_LOGIN</code>.</li>
+    <li>The attesters check the gist, commit, reveal, and the contract links the accounts and releases your escrow in the same transaction. From then on every merge pays your NEAR account directly.</li>
+  </ol>
+  <p class="small muted">A GitHub account can be linked once. The link is public: it ties your GitHub identity to your NEAR account on chain.</p>
+</section>
+{{end}}
