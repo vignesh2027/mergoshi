@@ -31,7 +31,11 @@ func loadApp(envPath string) (*app, error) {
 }
 
 func (a *app) explorer(hash string) string {
-	return strings.TrimRight(a.env.Or("NEAR_EXPLORER_URL", "https://testnet.nearblocks.io"), "/") + "/txns/" + hash
+	base := a.env.Or("NEAR_EXPLORER_URL", "https://testnet.nearblocks.io")
+	if base == "none" {
+		return "tx " + hash
+	}
+	return strings.TrimRight(base, "/") + "/txns/" + hash
 }
 
 func (a *app) account(idKey, keyKey string) (*near.Account, error) {
@@ -99,7 +103,7 @@ func launchParams(attesters []string, fast bool) token.Params {
 		AuthorBps: 7000, ReviewBps: 2000, AttesterBps: 500, FeastBps: 500,
 		MaxPaidReviewers: 3, StreakStepBps: 1000, StreakMaxBonusBps: 4000,
 		RepoDailyCap: 12, RepoFloor: 1, AuthorsPerSlot: 3, AuthorDailyCap: 4,
-		MaxMergeAgeSecs:  21 * 86400,
+		MaxMergeAgeSecs:  7 * 86400,
 		MinGitHubAgeDays: 90, MinRepoStars: 100, MinRepoAgeDays: 180,
 		RepoEnrollBurn: e18(500), ExileMin: e18(1000),
 		FeastPeriodSecs: 6 * 3600, FeastBurnBps: 5000, FeastMaxGuests: 20,
@@ -161,7 +165,7 @@ func (a *app) bootstrap(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
-		out, err := root.Send(ctx, id, near.CreateAccount{}, near.Transfer{Deposit: near.MustNEAR(a.env.Or("MERGOSHI_ATTESTER_FUNDING", "0.5"))}, near.AddKey{PublicKey: k.Public})
+		out, err := root.Send(ctx, id, near.CreateAccount{}, near.Transfer{Deposit: near.MustNEAR(a.env.Or("MERGOSHI_ATTESTER_FUNDING", "0.45"))}, near.AddKey{PublicKey: k.Public})
 		if err != nil {
 			return fmt.Errorf("create %s: %w", id, err)
 		}
@@ -183,7 +187,7 @@ func (a *app) bootstrap(ctx context.Context) error {
 		p := launchParams(attesters, a.env.Get("MERGOSHI_FAST") == "1")
 		out, err := root.Send(ctx, tokenID,
 			near.CreateAccount{},
-			near.Transfer{Deposit: near.MustNEAR(a.env.Or("MERGOSHI_TOKEN_FUNDING", "4.5"))},
+			near.Transfer{Deposit: near.MustNEAR(a.env.Or("MERGOSHI_TOKEN_FUNDING", "6"))},
 			near.DeployContract{Code: code},
 			token.New(p),
 		)

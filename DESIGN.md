@@ -80,7 +80,7 @@ All parameters are set in `new(params)` and readable with `params()`. Values for
 | streak | +10 percent a week, max +40 | same | rewards rhythm without letting veterans dominate |
 | repo floor, authors per slot, daily cap | 1, 3, 12 | same | chosen from the sweep in section 6 |
 | author daily cap | 4 | same | 4 and above keeps 91.5 percent of honest merges; 1 would drop to 84 |
-| max merge age | 7 days | 21 days | testnet launch picks up recent real merges |
+| max merge age | 7 days | same | no back-minting; the testnet launch picks up the last week of real merges |
 | min GitHub account age | 90 days | same | throwaway accounts |
 | repo eligibility | 100 stars, 180 days, not a fork | same | |
 | repo offering | 500 MRGO | same | spam cost, burned |
