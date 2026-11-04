@@ -180,9 +180,9 @@ func (a *app) bootstrap(ctx context.Context) error {
 
 	tokenID := "token." + root.ID
 	if !a.exists(ctx, tokenID) {
-		code, err := os.ReadFile(a.env.Or("MERGOSHI_WASM", "contract/target/near/mergoshi_token.wasm"))
+		code, err := readWasm(a.env.Get("MERGOSHI_WASM"))
 		if err != nil {
-			return fmt.Errorf("read contract wasm (build it with `make contract`): %w", err)
+			return err
 		}
 		p := launchParams(attesters, a.env.Get("MERGOSHI_FAST") == "1")
 		out, err := root.Send(ctx, tokenID,
@@ -317,4 +317,20 @@ func (a *app) attesters(only map[string]bool, which []int) ([]*attester.Attester
 		out = append(out, attester.New(cfg, attester.NearChain{Client: tc, Signer: acc}, ghc))
 	}
 	return out, nil
+}
+
+// readWasm prefers a fresh build from `make contract` and falls back to the
+// committed build in contract/res.
+func readWasm(path string) ([]byte, error) {
+	paths := []string{"contract/target/near/mergoshi_token.wasm", "contract/res/mergoshi_token.wasm"}
+	if path != "" {
+		paths = []string{path}
+	}
+	for _, p := range paths {
+		if code, err := os.ReadFile(p); err == nil {
+			fmt.Println("contract code:", p)
+			return code, nil
+		}
+	}
+	return nil, fmt.Errorf("no contract wasm found in %v (run `make contract`)", paths)
 }

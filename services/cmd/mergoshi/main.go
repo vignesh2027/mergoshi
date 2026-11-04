@@ -78,6 +78,8 @@ func main() {
 		fs.StringVar(&o.only, "only", "", "comma separated merge keys to attest")
 		fs.BoolVar(&o.until, "until-settled", false, "stop once every -only key has settled")
 		fs.DurationVar(&o.every, "every", 5*time.Second, "time between attester passes")
+		fs.StringVar(&o.addr, "addr", ":8080", "dashboard listen address")
+		fs.StringVar(&o.snapshot, "snapshot", "sim/data/snapshot.json", "repository data for the fake GitHub")
 		_ = fs.Parse(args)
 		err = runLocal(ctx, o)
 	case "snapshot":

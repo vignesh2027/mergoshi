@@ -1,0 +1,33 @@
+{{define "body"}}{{$d := .Data}}
+<div class="fake">
+<section class="card wide">
+  <p class="eyebrow">Local sandbox only</p>
+  <h2>Fake GitHub <small>a stand-in for api.github.com so you can merge a pull request and watch it mint</small></h2>
+  {{if $d.Flash}}<p class="tag" style="display:inline-block;padding:6px 12px;font-size:13px">{{$d.Flash}}</p>{{end}}
+  <form method="post" action="/fake/merge">
+    <label>Repository<select name="repo">{{range $d.Repos}}<option>{{.}}</option>{{end}}</select></label>
+    <label>Author<select name="author">{{range $d.Users}}<option value="{{.ID}}">{{.Login}}{{if $d.Young .}} (account under 90 days){{end}}</option>{{end}}</select></label>
+    <label>Approver<select name="approver"><option value="0">nobody (self merge)</option>{{range $d.Users}}<option value="{{.ID}}">{{.Login}}</option>{{end}}</select></label>
+    <label>Second approver<select name="approver"><option value="0">nobody</option>{{range $d.Users}}<option value="{{.ID}}">{{.Login}}</option>{{end}}</select></label>
+    <button>Merge pull request</button>
+  </form>
+  <p class="small muted">The three attesters poll this server every few seconds, read the pull request, commit to a hash of the claim, reveal it, and the contract mints when two agree. Watch the <a href="/">live page</a>.</p>
+</section>
+
+<section class="card wide">
+  <h2>Rituals and attacks <small>each button sends a real transaction to the local chain</small></h2>
+  <form method="post" action="/fake/link" style="grid-template-columns:1fr auto"><p class="small">Publish a gist <code>mergoshi-link:{{$d.Contributor}}</code> as <b>vignesh2027</b> and call <code>request_link</code> from <code>{{$d.Contributor}}</code>. The attesters check the gist and the escrow is released.</p><button class="violet">Link vignesh2027</button></form>
+  <form method="post" action="/fake/lie" style="grid-template-columns:1fr auto"><p class="small">Attester 3 commits and reveals a claim for a pull request that does not exist. The other two vote NONE, the round is rejected and attester 3 loses part of its bond.</p><button class="red">Send a lying attester</button></form>
+  <form method="post" action="/fake/feast" style="grid-template-columns:1fr auto"><p class="small">Call the maintainers' feast. It works once the feast period has passed: half the pot burns, half goes to the busiest reviewers.</p><button class="violet">Call the feast</button></form>
+  <form method="post" action="/fake/propose" style="grid-template-columns:1fr auto"><p class="small">From <code>{{$d.Contributor}}</code>, burn the offering and propose <code>community/fresh-lib</code> (450 stars, two years old). The attesters read it and the contract enrolls it.</p><button>Propose a repository</button></form>
+  <form method="post" action="/fake/exile" style="grid-template-columns:1fr auto"><label>Repository to exile<select name="repo">{{range $d.Repos}}<option>{{.}}</option>{{end}}</select></label><button class="red">Burn to exile</button></form>
+  <p class="small muted">Exile burns, from <code>{{$d.Contributor}}</code>, as much as the repository minted over the last two windows (at least the exile minimum). It needs a linked, funded account, so link first and merge a few pull requests as vignesh2027.</p>
+</section>
+
+<section class="card wide">
+  <h2>Recently merged here</h2>
+  {{if not $d.Recent}}<p class="muted">Nothing merged yet.</p>{{end}}
+  {{range $d.Recent}}<div class="pr"><span><b>{{.Repo}}#{{.Number}}</b> by {{$d.Login .Author}}{{if .Approvers}}, approved by {{range .Approvers}}{{$d.Login .}} {{end}}{{else}}, no approval{{end}}</span><span class="small muted">{{.MergedAt.Format "15:04:05"}}</span></div>{{end}}
+</section>
+</div>
+{{end}}

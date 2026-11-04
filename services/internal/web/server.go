@@ -101,7 +101,7 @@ func (s *Server) templates() error {
 		"sub":    func(a, b int64) int64 { return a - b },
 	}
 	s.tpl = map[string]*template.Template{}
-	for _, page := range []string{"home", "ledger", "params", "escrow", "sim", "join"} {
+	for _, page := range []string{"home", "ledger", "params", "escrow", "sim", "join", "fake"} {
 		t, err := template.New("layout.html").Funcs(funcs).ParseFS(assets, "templates/layout.html", "templates/"+page+".html")
 		if err != nil {
 			return err
@@ -208,6 +208,19 @@ func (s *Server) render(w http.ResponseWriter, name, title string, sn *Snapshot,
 	if err := s.tpl[name].Execute(w, p); err != nil {
 		log.Printf("render %s: %v", name, err)
 	}
+}
+
+// Render draws a named page with the current snapshot; used by local mode.
+func (s *Server) Render(w http.ResponseWriter, r *http.Request, name, title string, data any) {
+	s.mu.Lock()
+	s.at = time.Time{} // always fresh after a demo action
+	s.mu.Unlock()
+	sn, err := s.Load(r.Context())
+	if err != nil {
+		s.fail(w, err)
+		return
+	}
+	s.render(w, name, title, sn, data)
 }
 
 func (s *Server) fail(w http.ResponseWriter, err error) {

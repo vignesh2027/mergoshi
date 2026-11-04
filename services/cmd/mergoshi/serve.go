@@ -11,7 +11,7 @@ import (
 )
 
 // serve runs the dashboard, and the attesters too when asked.
-func (a *app) serve(ctx context.Context, addr, network string, withAttesters bool, extra func(*http.ServeMux) []web.NavLink) error {
+func (a *app) serve(ctx context.Context, addr, network string, withAttesters bool, extra func(*http.ServeMux, *web.Server) []web.NavLink) error {
 	tc, err := a.client()
 	if err != nil {
 		return err
@@ -24,15 +24,19 @@ func (a *app) serve(ctx context.Context, addr, network string, withAttesters boo
 	mux := http.NewServeMux()
 	mux.Handle("/", h)
 	if extra != nil {
-		s.Extra = extra(mux)
+		s.Extra = extra(mux, s)
 	}
 	if withAttesters {
+		every := 20 * time.Second
+		if network == "local" {
+			every = 3 * time.Second
+		}
 		atts, err := a.attesters(nil, []int{1, 2, 3})
 		if err != nil {
 			return err
 		}
 		for _, at := range atts {
-			go func() { _ = at.Run(ctx, 20*time.Second) }()
+			go func() { _ = at.Run(ctx, every) }()
 		}
 	}
 	srv := &http.Server{Addr: addr, Handler: mux, ReadHeaderTimeout: 10 * time.Second}
