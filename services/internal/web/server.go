@@ -341,8 +341,14 @@ func (s *Server) simFile(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) accountLink(id string) template.HTML {
 	label := template.HTMLEscapeString(id)
-	if strings.HasPrefix(id, "github:") {
-		return template.HTML(`<span class="gh" title="held in escrow until this GitHub account links">` + label + `</span>`)
+	if rest, ok := strings.CutPrefix(id, "github:"); ok {
+		gid, login, _ := strings.Cut(rest, ":")
+		if login == "" {
+			login = "github id " + gid
+		} else {
+			login = `<a href="https://github.com/` + template.HTMLEscapeString(login) + `" target="_blank" rel="noopener">` + template.HTMLEscapeString(login) + `</a>`
+		}
+		return template.HTML(`<span class="gh" title="held in escrow for GitHub id ` + template.HTMLEscapeString(gid) + ` until it links">` + login + ` <em>escrow</em></span>`)
 	}
 	if s.Network == "testnet" {
 		return template.HTML(fmt.Sprintf(`<a href="https://testnet.nearblocks.io/address/%s" target="_blank" rel="noopener">%s</a>`, label, label))

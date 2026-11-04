@@ -24,6 +24,7 @@ commands:
   attest     run the attesters (flags: -which 1,2,3  -only key,key  -every 20s  -until-settled)
   local      run a sandbox node, the token, three attesters and the dashboard on this machine
   serve      run the dashboard (flags: -addr :8080  -attesters)
+  retire     start the attesters' exit; with -withdraw -beneficiary X, withdraw bonds and delete them
   snapshot   record public merge history for the simulation (sim/data/snapshot.json)
 `
 
@@ -41,7 +42,7 @@ func main() {
 		envPath = ".env"
 	}
 	switch cmd {
-	case "bootstrap", "status", "attest", "serve":
+	case "bootstrap", "status", "attest", "serve", "retire":
 		a, lerr := loadApp(envPath)
 		if lerr != nil {
 			err = lerr
@@ -52,6 +53,12 @@ func main() {
 			err = a.bootstrap(ctx)
 		case "status":
 			err = a.status(ctx)
+		case "retire":
+			fs := flag.NewFlagSet(cmd, flag.ExitOnError)
+			withdraw := fs.Bool("withdraw", false, "withdraw the bonds and delete the attester accounts")
+			to := fs.String("beneficiary", "", "account that receives what is left of each deleted attester")
+			_ = fs.Parse(args)
+			err = a.retire(ctx, *withdraw, *to)
 		case "serve":
 			fs := flag.NewFlagSet(cmd, flag.ExitOnError)
 			addr := fs.String("addr", ":"+a.env.Or("PORT", "8080"), "listen address")

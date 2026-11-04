@@ -5,7 +5,12 @@ all: build
 ## Build the token contract to contract/target/near/mergoshi_token.wasm (needs cargo-near).
 ## Without it, the commands fall back to the committed build in contract/res/.
 contract:
-	cd contract && cargo near build non-reproducible-wasm
+	cd contract && cargo near build non-reproducible-wasm --no-embed-abi
+	@if command -v wasm-opt >/dev/null; then \
+		wasm-opt -Oz --enable-bulk-memory --enable-sign-ext --enable-mutable-globals --strip-debug --strip-producers \
+			contract/target/near/mergoshi_token.wasm -o contract/target/near/mergoshi_token.wasm; \
+	fi
+	@ls -l contract/target/near/mergoshi_token.wasm
 
 ## Build the Go binary to bin/mergoshi.
 build:

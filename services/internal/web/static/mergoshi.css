@@ -95,7 +95,8 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 28px 40px; color: var(
 .parts li { display: grid; grid-template-columns: 120px 1fr auto; gap: 10px; }
 .parts span { color: var(--muted); }
 .parts b { font-weight: 600; }
-.gh { color: var(--violet); font-family: var(--mono); font-size: 12px; }
+.gh a { color: var(--violet); font-weight: 600; }
+.gh em { font-style: normal; font-size: 10.5px; font-weight: 700; color: var(--violet); background: var(--violet-tint); padding: 1px 6px; border-radius: 999px; margin-left: 4px; }
 
 .t { width: 100%; border-collapse: collapse; font-size: 13.5px; }
 .t th { text-align: left; font-size: 11.5px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; padding: 4px 6px; border-bottom: 1px solid var(--line); }

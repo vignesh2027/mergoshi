@@ -69,7 +69,7 @@ impl Mergoshi {
             eaten += e.amount.0;
             parts.push(Part {
                 role: "unclaimed".into(),
-                to: format!("github:{id}"),
+                to: format!("github:{id}:{}", e.login),
                 amount: e.amount,
             });
         }
@@ -357,9 +357,12 @@ impl Mergoshi {
         let me = env::current_account_id();
         self.mint_to(&me, amount, memo);
         self.add_escrow(github_id, login, amount);
+        if !self.logins.contains_key(&github_id) {
+            self.logins.insert(github_id, login.to_string());
+        }
         Part {
             role: role.into(),
-            to: format!("github:{github_id}"),
+            to: format!("github:{github_id}:{login}"),
             amount: U128(amount),
         }
     }
@@ -393,15 +396,11 @@ impl Mergoshi {
                 amount: U128(amount),
             };
         }
-        let login = self
-            .escrow
-            .get(&github_id)
-            .map(|e| e.login.clone())
-            .unwrap_or_default();
+        let login = self.logins.get(&github_id).cloned().unwrap_or_default();
         self.add_escrow(github_id, &login, amount);
         Part {
             role: "guest".into(),
-            to: format!("github:{github_id}"),
+            to: format!("github:{github_id}:{login}"),
             amount: U128(amount),
         }
     }

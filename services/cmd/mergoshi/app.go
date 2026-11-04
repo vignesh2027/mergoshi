@@ -355,3 +355,43 @@ func (a *app) topUp(ctx context.Context, root *near.Account, ids []string) error
 	}
 	return nil
 }
+
+// retire winds down this deployment's attesters: first the exit, then after
+// the exit delay the bond withdrawal and account deletion.
+func (a *app) retire(ctx context.Context, withdraw bool, beneficiary string) error {
+	tc, err := a.client()
+	if err != nil {
+		return err
+	}
+	for i := 1; i <= 3; i++ {
+		idKey, keyKey := attesterEnv(i)
+		acc, err := a.account(idKey, keyKey)
+		if err != nil {
+			return err
+		}
+		if !withdraw {
+			out, err := acc.Send(ctx, tc.Contract, near.CallArgs("start_exit", map[string]any{}, 20))
+			if err != nil {
+				fmt.Println(acc.ID, "start_exit:", err)
+				continue
+			}
+			fmt.Println(acc.ID, "exit started", a.explorer(out.Hash))
+			continue
+		}
+		if beneficiary == "" {
+			return fmt.Errorf("-withdraw needs -beneficiary")
+		}
+		if out, err := acc.Send(ctx, tc.Contract, near.CallArgs("withdraw_bond", map[string]any{}, 20)); err != nil {
+			fmt.Println(acc.ID, "withdraw_bond:", err)
+		} else {
+			fmt.Println(acc.ID, "bond withdrawn", a.explorer(out.Hash))
+		}
+		out, err := acc.Send(ctx, acc.ID, near.DeleteAccount{Beneficiary: beneficiary})
+		if err != nil {
+			fmt.Println(acc.ID, "delete:", err)
+			continue
+		}
+		fmt.Println(acc.ID, "deleted, balance sent to", beneficiary, a.explorer(out.Hash))
+	}
+	return nil
+}

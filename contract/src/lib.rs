@@ -62,6 +62,7 @@ enum Key {
     Exiled,
     Requesting,
     RepoIds,
+    Logins,
 }
 
 /// Every rule of the token. Set once in `new`; there is no method that changes it.
@@ -258,6 +259,8 @@ pub struct Mergoshi {
     exiled: LookupMap<String, u64>,
     requesting: LookupMap<AccountId, String>,
     repo_ids: LookupMap<u64, String>,
+    /// GitHub logins of accounts that have held escrow, for readable ledgers.
+    logins: LookupMap<u64, String>,
     stats: Stats,
 }
 
@@ -353,6 +356,7 @@ impl Mergoshi {
             exiled: LookupMap::new(Key::Exiled),
             requesting: LookupMap::new(Key::Requesting),
             repo_ids: LookupMap::new(Key::RepoIds),
+            logins: LookupMap::new(Key::Logins),
             stats: Stats {
                 last_feast_at: now,
                 ..Default::default()

@@ -24,7 +24,7 @@ func TestHelpers(t *testing.T) {
 		t.Fatal("key not escaped")
 	}
 	s := &Server{Network: "testnet"}
-	if got := string(s.accountLink("github:42")); !strings.Contains(got, "escrow") {
+	if got := string(s.accountLink("github:42:ada")); !strings.Contains(got, "escrow") || !strings.Contains(got, "github.com/ada") {
 		t.Fatal(got)
 	}
 	if humanDuration(90*time.Second) != "1m" || humanDuration(3*24*time.Hour) != "3 days" {

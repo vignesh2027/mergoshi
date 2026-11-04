@@ -515,10 +515,7 @@ fn proposing_a_repo_burns_the_offering() {
     t.at("vignesh.near", NEAR / 100)
         .propose_repo("datadog/orchestrion".into());
     assert_eq!(t.c.total_supply().0, before - 50 * E18);
-    let ok = format!(
-        "repo\ndatadog/orchestrion\n42\n1\n{}\n0",
-        T0 - 400 * 86_400
-    );
+    let ok = format!("repo\ndatadog/orchestrion\n42\n1\n{}\n0", T0 - 400 * 86_400);
     assert_eq!(t.attest("repo:datadog/orchestrion", Some(&ok)), "enrolled");
     assert!(
         t.c.repos(None, None)
@@ -820,27 +817,45 @@ fn pending_link_blocks_unregister() {
 #[test]
 fn failed_links_and_repos_can_be_retried() {
     let mut t = T::new();
-    assert_eq!(link(&mut t, 9, "fresh", "fresh.near", T0 - 10 * 86_400), "too young");
-    assert_eq!(t.at("x.near", 0).sweep(vec!["link:9:fresh.near".into()]), vec!["closed".to_string()]);
+    assert_eq!(
+        link(&mut t, 9, "fresh", "fresh.near", T0 - 10 * 86_400),
+        "too young"
+    );
+    assert_eq!(
+        t.at("x.near", 0).sweep(vec!["link:9:fresh.near".into()]),
+        vec!["closed".to_string()]
+    );
     // The same account may ask again once it qualifies.
-    assert_eq!(link(&mut t, 9, "fresh", "fresh.near", T0 - 400 * 86_400), "linked");
+    assert_eq!(
+        link(&mut t, 9, "fresh", "fresh.near", T0 - 400 * 86_400),
+        "linked"
+    );
 }
 
 #[test]
 #[should_panic(expected = "the contract holds only escrow and the feast pot")]
 fn transfers_to_the_contract_are_refused() {
     let mut t = T::new();
-    let text = merge_text("prometheus/client_golang", 1, T0 - 60, 101, "vignesh2027", "");
+    let text = merge_text(
+        "prometheus/client_golang",
+        1,
+        T0 - 60,
+        101,
+        "vignesh2027",
+        "",
+    );
     t.attest("merge:prometheus/client_golang#1", Some(&text));
     link(&mut t, 101, "vignesh2027", "vignesh.near", 1);
-    t.at("vignesh.near", 1).ft_transfer(acc("mergoshi.near"), U128(1), None);
+    t.at("vignesh.near", 1)
+        .ft_transfer(acc("mergoshi.near"), U128(1), None);
 }
 
 #[test]
 #[should_panic(expected = "burn at least a tenth")]
 fn exile_dust_is_refused() {
     let mut t = exile_setup();
-    t.at("vignesh.near", 1).exile("prometheus/client_golang".into(), U128(1));
+    t.at("vignesh.near", 1)
+        .exile("prometheus/client_golang".into(), U128(1));
 }
 
 #[test]
@@ -855,6 +870,11 @@ fn silent_attesters_are_counted() {
     t.reveal("a2.near", key, Some(&text));
     t.now += 400;
     t.at("x.near", 0).sweep(vec![key.into()]);
-    let a3 = t.c.attesters().into_iter().find(|a| a.0.as_str() == "a3.near").unwrap().1;
+    let a3 =
+        t.c.attesters()
+            .into_iter()
+            .find(|a| a.0.as_str() == "a3.near")
+            .unwrap()
+            .1;
     assert_eq!(a3.missed, 1);
 }
