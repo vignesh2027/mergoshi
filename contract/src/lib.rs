@@ -32,6 +32,11 @@ mod tests;
 
 use mechanic::BPS;
 
+/// Burns smaller than one whole token from unregistering are counted in the
+/// stats and emitted as events but not written to the ledger, so dust cannot be
+/// used to make the contract pay for log storage.
+const DUST: u128 = 1_000_000_000_000_000_000;
+
 #[derive(BorshStorageKey)]
 #[near]
 enum Key {
@@ -55,6 +60,8 @@ enum Key {
     RepoMinted,
     ExileBurns,
     Exiled,
+    Requesting,
+    RepoIds,
 }
 
 /// Every rule of the token. Set once in `new`; there is no method that changes it.
@@ -130,13 +137,16 @@ pub struct AttesterState {
     pub slashes: u32,
     pub slashed: U128,
     pub earned: U128,
+    /// Rounds this attester committed to and never revealed before they closed.
+    pub missed: u32,
 }
 
 #[near(serializers = [borsh, json])]
 #[derive(Clone, Debug)]
 pub struct RepoInfo {
     pub enrolled_at: u64,
-    pub stars: u64,
+    /// GitHub repository id, 0 for genesis repositories.
+    pub repo_id: u64,
     pub genesis: bool,
 }
 
@@ -246,6 +256,8 @@ pub struct Mergoshi {
     repo_minted: LookupMap<String, u128>,
     exile_burns: LookupMap<String, u128>,
     exiled: LookupMap<String, u64>,
+    requesting: LookupMap<AccountId, String>,
+    repo_ids: LookupMap<u64, String>,
     stats: Stats,
 }
 
@@ -339,6 +351,8 @@ impl Mergoshi {
             repo_minted: LookupMap::new(Key::RepoMinted),
             exile_burns: LookupMap::new(Key::ExileBurns),
             exiled: LookupMap::new(Key::Exiled),
+            requesting: LookupMap::new(Key::Requesting),
+            repo_ids: LookupMap::new(Key::RepoIds),
             stats: Stats {
                 last_feast_at: now,
                 ..Default::default()
@@ -354,7 +368,7 @@ impl Mergoshi {
                 r.clone(),
                 RepoInfo {
                     enrolled_at: now,
-                    stars: 0,
+                    repo_id: 0,
                     genesis: true,
                 },
             );
@@ -448,8 +462,12 @@ impl Mergoshi {
         if self.token.accounts.get(&who).is_none() {
             self.token.internal_register_account(&who);
         }
+        require!(
+            !self.requesting.contains_key(&who),
+            "this account already has a pending link request"
+        );
         let key = claim::link_key(github_id, &who);
-        require!(!self.pending_links.contains_key(&key), "already requested");
+        self.requesting.insert(who.clone(), key.clone());
         self.pending_links.insert(
             key,
             Request {
@@ -532,21 +550,35 @@ impl Mergoshi {
             .map(|(a, s)| (a.clone(), s.clone()))
             .collect()
     }
-    pub fn repos(&self) -> Vec<(String, RepoInfo)> {
+    pub fn repos(&self, from_index: Option<u32>, limit: Option<u32>) -> Vec<(String, RepoInfo)> {
         self.repos
             .iter()
+            .skip(from_index.unwrap_or(0) as usize)
+            .take(limit.unwrap_or(100).min(200) as usize)
             .map(|(a, s)| (a.clone(), s.clone()))
             .collect()
     }
-    pub fn pending_repos(&self) -> Vec<(String, Request)> {
+    pub fn pending_repos(
+        &self,
+        from_index: Option<u32>,
+        limit: Option<u32>,
+    ) -> Vec<(String, Request)> {
         self.pending_repos
             .iter()
+            .skip(from_index.unwrap_or(0) as usize)
+            .take(limit.unwrap_or(100).min(200) as usize)
             .map(|(a, s)| (a.clone(), s.clone()))
             .collect()
     }
-    pub fn pending_links(&self) -> Vec<(String, Request)> {
+    pub fn pending_links(
+        &self,
+        from_index: Option<u32>,
+        limit: Option<u32>,
+    ) -> Vec<(String, Request)> {
         self.pending_links
             .iter()
+            .skip(from_index.unwrap_or(0) as usize)
+            .take(limit.unwrap_or(100).min(200) as usize)
             .map(|(a, s)| (a.clone(), s.clone()))
             .collect()
     }
@@ -593,8 +625,13 @@ impl Mergoshi {
     pub fn exiled_at(&self, repo: String) -> Option<u64> {
         self.exiled.get(&repo).copied()
     }
-    pub fn guests(&self) -> Vec<(u64, u32)> {
-        self.guests.iter().map(|(k, v)| (*k, *v)).collect()
+    pub fn guests(&self, from_index: Option<u32>, limit: Option<u32>) -> Vec<(u64, u32)> {
+        self.guests
+            .iter()
+            .skip(from_index.unwrap_or(0) as usize)
+            .take(limit.unwrap_or(100).min(200) as usize)
+            .map(|(k, v)| (*k, *v))
+            .collect()
     }
     pub fn log_len(&self) -> u64 {
         self.log.len() as u64
@@ -615,6 +652,10 @@ impl Mergoshi {
 impl FungibleTokenCore for Mergoshi {
     #[payable]
     fn ft_transfer(&mut self, receiver_id: AccountId, amount: U128, memo: Option<String>) {
+        require!(
+            receiver_id != env::current_account_id(),
+            "the contract holds only escrow and the feast pot"
+        );
         self.token.ft_transfer(receiver_id, amount, memo)
     }
 
@@ -626,6 +667,10 @@ impl FungibleTokenCore for Mergoshi {
         memo: Option<String>,
         msg: String,
     ) -> PromiseOrValue<U128> {
+        require!(
+            receiver_id != env::current_account_id(),
+            "the contract holds only escrow and the feast pot"
+        );
         self.token.ft_transfer_call(receiver_id, amount, memo, msg)
     }
 
@@ -652,6 +697,8 @@ impl FungibleTokenResolver for Mergoshi {
                 .internal_ft_resolve_transfer(&sender_id, receiver_id, amount);
         if burned > 0 {
             self.stats.total_burned = U128(self.stats.total_burned.0 + burned);
+        }
+        if burned >= DUST {
             self.push_log(
                 "unregister",
                 "",
@@ -689,8 +736,10 @@ impl StorageManagement for Mergoshi {
     fn storage_unregister(&mut self, force: Option<bool>) -> bool {
         let who = env::predecessor_account_id();
         require!(
-            !self.attesters.contains_key(&who) && !self.account_links.contains_key(&who),
-            "attesters and linked accounts cannot unregister"
+            !self.attesters.contains_key(&who)
+                && !self.account_links.contains_key(&who)
+                && !self.requesting.contains_key(&who),
+            "attesters, linked accounts and accounts with a pending link cannot unregister"
         );
         assert_one_yocto();
         match self.token.internal_storage_unregister(force) {
@@ -703,6 +752,8 @@ impl StorageManagement for Mergoshi {
                     }
                     .emit();
                     self.stats.total_burned = U128(self.stats.total_burned.0 + balance);
+                }
+                if balance >= DUST {
                     self.push_log(
                         "unregister",
                         "",
@@ -769,6 +820,10 @@ impl Mergoshi {
             parts,
             note,
         });
+    }
+
+    pub(crate) fn registered(&self, account: &AccountId) -> bool {
+        self.token.accounts.contains_key(account)
     }
 
     /// Mints to an account that is known to be registered.

@@ -48,7 +48,6 @@ type NavLink struct{ Href, Label string }
 type RepoRow struct {
 	Name     string
 	Genesis  bool
-	Stars    int64
 	Today    int
 	Cap      int
 	CapFull  bool
@@ -165,7 +164,7 @@ func (s *Server) Load(ctx context.Context) (*Snapshot, error) {
 	for _, r := range repos {
 		today, _ := c.RepoDayCount(ctx, r.Name, now/86400)
 		cp, _ := c.RepoCap(ctx, r.Name, now)
-		sn.Repos = append(sn.Repos, RepoRow{Name: r.Name, Genesis: r.Genesis, Stars: r.Stars, Today: today, Cap: cp, CapFull: today >= cp, Enrolled: time.Unix(r.EnrolledAt, 0)})
+		sn.Repos = append(sn.Repos, RepoRow{Name: r.Name, Genesis: r.Genesis, Today: today, Cap: cp, CapFull: today >= cp, Enrolled: time.Unix(r.EnrolledAt, 0)})
 	}
 	sort.Slice(sn.Repos, func(i, j int) bool { return sn.Repos[i].Name < sn.Repos[j].Name })
 	if sn.Rounds, err = c.OpenRounds(ctx); err != nil {

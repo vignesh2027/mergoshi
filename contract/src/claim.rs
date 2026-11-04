@@ -7,7 +7,7 @@
 //! ```text
 //! merge\n<owner/repo>\n<number>\n<merge sha>\n<merged_at>\n<author id>\n<author login>\n<author created_at>\n<approvers>
 //! link\n<github id>\n<login>\n<near account>\n<github created_at>
-//! repo\n<owner/repo>\n<repo id>\n<stars>\n<created_at>\n<fork 0|1>
+//! repo\n<owner/repo>\n<repo id>\n<stars at or above min_repo_stars 0|1>\n<created_at>\n<fork 0|1>
 //! ```
 //!
 //! Repository names are lower case. Times are unix seconds. `approvers` is
@@ -49,7 +49,9 @@ pub struct LinkClaim {
 pub struct RepoClaim {
     pub repo: String,
     pub repo_id: u64,
-    pub stars: u64,
+    /// Whether the repository has at least `min_repo_stars` stars. A flag, not a
+    /// count, so two attesters reading a few seconds apart still agree.
+    pub stars_ok: bool,
     pub created_at: u64,
     pub fork: bool,
 }
@@ -208,15 +210,16 @@ pub fn parse(text: &str) -> Result<Claim, String> {
             if !valid_repo(f[1]) {
                 return Err("bad repo".into());
             }
-            let fork = match f[5] {
-                "0" => false,
-                "1" => true,
-                _ => return Err("bad fork flag".into()),
+            let flag = |v: &str| match v {
+                "0" => Ok(false),
+                "1" => Ok(true),
+                _ => Err("bad flag".to_string()),
             };
+            let fork = flag(f[5])?;
             Ok(Claim::Repo(RepoClaim {
                 repo: f[1].to_string(),
                 repo_id: num(f[2])?,
-                stars: num(f[3])?,
+                stars_ok: flag(f[3])?,
                 created_at: num(f[4])?,
                 fork,
             }))
@@ -285,7 +288,7 @@ mod tests {
     fn parses_link_and_repo() {
         let l = parse("link\n42\nalice\nalice.testnet\n1500000000").unwrap();
         assert_eq!(l.key(), "link:42:alice.testnet");
-        let r = parse("repo\nhelm/chart-testing\n12345\n1500\n1500000000\n0").unwrap();
+        let r = parse("repo\nhelm/chart-testing\n12345\n1\n1500000000\n0").unwrap();
         assert_eq!(r.key(), "repo:helm/chart-testing");
         assert_eq!(
             merge_key_repo("merge:helm/chart-testing#873"),

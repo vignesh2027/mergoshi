@@ -492,7 +492,7 @@ func (a *Attester) buildRepo(ctx context.Context, repo string) (*string, error) 
 	if !strings.EqualFold(r.FullName, repo) {
 		return nil, errUnconfirmed // renamed or transferred
 	}
-	text := claim.Repo{Repo: repo, RepoID: r.ID, Stars: r.Stars, CreatedAt: r.CreatedAt.Unix(), Fork: r.Fork}.Text()
+	text := claim.Repo{Repo: repo, RepoID: r.ID, StarsOK: r.Stars >= a.params.MinRepoStars, CreatedAt: r.CreatedAt.Unix(), Fork: r.Fork}.Text()
 	return &text, nil
 }
 
@@ -516,7 +516,8 @@ func (a *Attester) sweep(ctx context.Context, rounds []token.Round) error {
 	for i, s := range token.Statuses(out) {
 		if i < len(keys) && (s == "closed" || s == "expired" || s == "no round") {
 			delete(a.committed, keys[i])
-			a.done[keys[i]] = s == "closed"
+			// Only merges are final; a link or repository can be asked for again.
+			a.done[keys[i]] = s == "closed" && strings.HasPrefix(keys[i], "merge:")
 		}
 	}
 	a.cfg.Logf("%s swept %d rounds (tx %s)", a.cfg.ID, len(keys), hash)

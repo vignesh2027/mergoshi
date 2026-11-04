@@ -93,9 +93,11 @@ impl Mergoshi {
                 let all_revealed = r.reveals.len() == r.commits.len();
                 if r.outcome.is_some() && (all_revealed || now > deadline) {
                     self.rounds.remove(&key);
+                    self.count_missed(&r);
                     "closed".to_string()
                 } else if r.outcome.is_none() && now > deadline {
                     self.rounds.remove(&key);
+                    self.count_missed(&r);
                     self.stats.rounds_expired += 1;
                     "expired".to_string()
                 } else {
@@ -127,6 +129,18 @@ impl Mergoshi {
     }
     fn reveal_deadline(&self, r: &Round) -> u64 {
         self.commit_deadline(r) + self.params.reveal_window_secs
+    }
+
+    /// Records attesters that committed to a closed round and never revealed.
+    fn count_missed(&mut self, r: &Round) {
+        for (a, _) in &r.commits {
+            if !r.reveals.iter().any(|x| &x.0 == a) {
+                if let Some(mut st) = self.attesters.get(a).cloned() {
+                    st.missed += 1;
+                    self.attesters.insert(a.clone(), st);
+                }
+            }
+        }
     }
 
     fn active_attesters(&self) -> usize {
@@ -289,7 +303,9 @@ impl Mergoshi {
             }
             self.settle(key, c, &agreeing)
         };
-        if hash != NONE_HASH {
+        // Only merges are final. A link or repository that failed a check may be
+        // asked for again later, once it qualifies.
+        if hash != NONE_HASH && key.starts_with("merge:") {
             self.done.insert(key.to_string(), DONE_SETTLED);
         }
         r.result = result.clone();

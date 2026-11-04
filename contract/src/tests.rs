@@ -478,7 +478,7 @@ fn young_github_accounts_cannot_link() {
         "too young"
     );
     assert!(t.c.link_of(9).is_none());
-    assert!(t.c.pending_links().is_empty());
+    assert!(t.c.pending_links(None, None).is_empty());
 }
 
 #[test]
@@ -516,17 +516,21 @@ fn proposing_a_repo_burns_the_offering() {
         .propose_repo("datadog/orchestrion".into());
     assert_eq!(t.c.total_supply().0, before - 50 * E18);
     let ok = format!(
-        "repo\ndatadog/orchestrion\n42\n625\n{}\n0",
+        "repo\ndatadog/orchestrion\n42\n1\n{}\n0",
         T0 - 400 * 86_400
     );
     assert_eq!(t.attest("repo:datadog/orchestrion", Some(&ok)), "enrolled");
-    assert!(t.c.repos().iter().any(|r| r.0 == "datadog/orchestrion"));
+    assert!(
+        t.c.repos(None, None)
+            .iter()
+            .any(|r| r.0 == "datadog/orchestrion")
+    );
 
     t.at("vignesh.near", NEAR / 100)
         .propose_repo("tiny/new".into());
-    let small = format!("repo\ntiny/new\n43\n3\n{}\n0", T0 - 10 * 86_400);
+    let small = format!("repo\ntiny/new\n43\n0\n{}\n0", T0 - 10 * 86_400);
     assert_eq!(t.attest("repo:tiny/new", Some(&small)), "not eligible");
-    assert!(!t.c.repos().iter().any(|r| r.0 == "tiny/new"));
+    assert!(!t.c.repos(None, None).iter().any(|r| r.0 == "tiny/new"));
     t.check_books();
 }
 
@@ -555,7 +559,7 @@ fn feast_burns_half_and_feeds_reviewers() {
     assert_eq!(t.bal("beorn.near") - reviewer_before, 25 * E18 / 10);
     assert_eq!(t.c.escrow_of(8).unwrap().amount.0, 20 * E18 + 25 * E18 / 10);
     assert_eq!(t.c.stats().feast_pot.0, 0);
-    assert!(t.c.guests().is_empty());
+    assert!(t.c.guests(None, None).is_empty());
     t.check_books();
 }
 
@@ -687,7 +691,11 @@ fn golden_replay_matches_the_simulation() {
     use near_sdk::serde_json::Value;
     let g: Value = near_sdk::serde_json::from_str(include_str!("../../sim/golden.json")).unwrap();
     let gp = &g["params"];
-    let num = |v: &Value| -> u128 { v.as_str().map(|s| s.parse().unwrap()).unwrap_or_else(|| v.as_u64().unwrap() as u128) };
+    let num = |v: &Value| -> u128 {
+        v.as_str()
+            .map(|s| s.parse().unwrap())
+            .unwrap_or_else(|| v.as_u64().unwrap() as u128)
+    };
     let mut p = params();
     p.base_reward = U128(num(&gp["base_reward"]));
     p.halving_every = num(&gp["halving_every"]) as u64;
@@ -708,7 +716,12 @@ fn golden_replay_matches_the_simulation() {
     p.feast_burn_bps = num(&gp["feast_burn_bps"]) as u16;
     p.feast_max_guests = num(&gp["feast_max_guests"]) as u8;
     p.escrow_ttl_secs = num(&gp["escrow_ttl_secs"]) as u64;
-    p.genesis_repos = g["repos"].as_array().unwrap().iter().map(|r| r.as_str().unwrap().to_string()).collect();
+    p.genesis_repos = g["repos"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|r| r.as_str().unwrap().to_string())
+        .collect();
     assert_eq!(g["t0"].as_u64().unwrap(), T0);
     let mut t = T::with(p);
 
@@ -718,19 +731,40 @@ fn golden_replay_matches_the_simulation() {
             "link" => {
                 let gid = e["gid"].as_u64().unwrap();
                 let who = format!("g{gid}.near");
-                assert_eq!(link(&mut t, gid, &format!("u{gid}"), &who, T0 - 400 * 86_400), "linked");
+                assert_eq!(
+                    link(&mut t, gid, &format!("u{gid}"), &who, T0 - 400 * 86_400),
+                    "linked"
+                );
             }
             "merge" => {
                 let repo = e["repo"].as_str().unwrap();
                 let n = e["number"].as_u64().unwrap();
                 let author = e["author"].as_u64().unwrap();
-                let approvers: Vec<String> = e["approvers"].as_array().unwrap().iter().map(|a| format!("{0}:u{0}", a.as_u64().unwrap())).collect();
-                let text = merge_text_aged(repo, n, e["merged_at"].as_u64().unwrap(), author, &format!("u{author}"), e["author_created_at"].as_u64().unwrap(), &approvers.join(","));
+                let approvers: Vec<String> = e["approvers"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|a| format!("{0}:u{0}", a.as_u64().unwrap()))
+                    .collect();
+                let text = merge_text_aged(
+                    repo,
+                    n,
+                    e["merged_at"].as_u64().unwrap(),
+                    author,
+                    &format!("u{author}"),
+                    e["author_created_at"].as_u64().unwrap(),
+                    &approvers.join(","),
+                );
                 let got = t.attest(&format!("merge:{repo}#{n}"), Some(&text));
                 assert_eq!(got, e["status"].as_str().unwrap(), "merge {repo}#{n}");
             }
             "eat" => {
-                let ids = e["ids"].as_array().unwrap().iter().map(|v| v.as_u64().unwrap()).collect();
+                let ids = e["ids"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|v| v.as_u64().unwrap())
+                    .collect();
                 t.at("keeper.near", 0).eat_stale_escrow(ids);
             }
             "feast" => {
@@ -752,12 +786,75 @@ fn golden_replay_matches_the_simulation() {
     assert_eq!(s.merges_stale, x["merges_stale"].as_u64().unwrap());
     assert_eq!(s.merges_young, x["merges_young"].as_u64().unwrap());
     for (gid, amount) in x["escrow"].as_object().unwrap() {
-        assert_eq!(t.c.escrow_of(gid.parse().unwrap()).map(|e| e.amount.0).unwrap_or(0), num(amount), "escrow {gid}");
+        assert_eq!(
+            t.c.escrow_of(gid.parse().unwrap())
+                .map(|e| e.amount.0)
+                .unwrap_or(0),
+            num(amount),
+            "escrow {gid}"
+        );
     }
-    assert_eq!(t.c.escrows(None, Some(200)).len(), x["escrow"].as_object().unwrap().len());
+    assert_eq!(
+        t.c.escrows(None, Some(200)).len(),
+        x["escrow"].as_object().unwrap().len()
+    );
     for (gid, amount) in x["linked_balances"].as_object().unwrap() {
-        assert_eq!(t.bal(&format!("g{gid}.near")), num(amount), "balance of {gid}");
+        assert_eq!(
+            t.bal(&format!("g{gid}.near")),
+            num(amount),
+            "balance of {gid}"
+        );
     }
     assert_eq!(t.bal("a1.near"), num(&x["attester_balance"]));
     t.check_books();
+}
+
+#[test]
+#[should_panic(expected = "pending link cannot unregister")]
+fn pending_link_blocks_unregister() {
+    let mut t = T::new();
+    t.at("evil.near", NEAR / 100).request_link(9, "evil".into());
+    t.at("evil.near", 1).storage_unregister(Some(true));
+}
+
+#[test]
+fn failed_links_and_repos_can_be_retried() {
+    let mut t = T::new();
+    assert_eq!(link(&mut t, 9, "fresh", "fresh.near", T0 - 10 * 86_400), "too young");
+    assert_eq!(t.at("x.near", 0).sweep(vec!["link:9:fresh.near".into()]), vec!["closed".to_string()]);
+    // The same account may ask again once it qualifies.
+    assert_eq!(link(&mut t, 9, "fresh", "fresh.near", T0 - 400 * 86_400), "linked");
+}
+
+#[test]
+#[should_panic(expected = "the contract holds only escrow and the feast pot")]
+fn transfers_to_the_contract_are_refused() {
+    let mut t = T::new();
+    let text = merge_text("prometheus/client_golang", 1, T0 - 60, 101, "vignesh2027", "");
+    t.attest("merge:prometheus/client_golang#1", Some(&text));
+    link(&mut t, 101, "vignesh2027", "vignesh.near", 1);
+    t.at("vignesh.near", 1).ft_transfer(acc("mergoshi.near"), U128(1), None);
+}
+
+#[test]
+#[should_panic(expected = "burn at least a tenth")]
+fn exile_dust_is_refused() {
+    let mut t = exile_setup();
+    t.at("vignesh.near", 1).exile("prometheus/client_golang".into(), U128(1));
+}
+
+#[test]
+fn silent_attesters_are_counted() {
+    let mut t = T::new();
+    let key = "merge:prometheus/client_golang#4";
+    let text = merge_text("prometheus/client_golang", 4, T0 - 60, 5, "alice", "");
+    for a in ["a1.near", "a2.near", "a3.near"] {
+        t.commit(a, key, Some(&text));
+    }
+    t.reveal("a1.near", key, Some(&text));
+    t.reveal("a2.near", key, Some(&text));
+    t.now += 400;
+    t.at("x.near", 0).sweep(vec![key.into()]);
+    let a3 = t.c.attesters().into_iter().find(|a| a.0.as_str() == "a3.near").unwrap().1;
+    assert_eq!(a3.missed, 1);
 }

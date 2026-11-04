@@ -202,6 +202,9 @@ func (a *app) bootstrap(ctx context.Context) error {
 	if err := a.bondAll(ctx); err != nil {
 		return err
 	}
+	if err := a.topUp(ctx, root, attesters); err != nil {
+		return err
+	}
 	if a.env.Get("MERGOSHI_SALT_SECRET") == "" {
 		var b [32]byte
 		_, _ = rand.Read(b[:])
@@ -333,4 +336,22 @@ func readWasm(path string) ([]byte, error) {
 		}
 	}
 	return nil, fmt.Errorf("no contract wasm found in %v (run `make contract`)", paths)
+}
+
+// topUp keeps each attester above a small working balance for gas.
+func (a *app) topUp(ctx context.Context, root *near.Account, ids []string) error {
+	floor := near.MustNEAR(a.env.Or("MERGOSHI_ATTESTER_FLOOR", "0.3"))
+	for _, id := range ids {
+		bal, ok, err := a.rpc.AccountBalance(ctx, id)
+		if err != nil || !ok || bal.Cmp(floor) >= 0 {
+			continue
+		}
+		need := new(big.Int).Sub(floor, bal)
+		out, err := root.Send(ctx, id, near.Transfer{Deposit: need})
+		if err != nil {
+			return fmt.Errorf("top up %s: %w", id, err)
+		}
+		fmt.Println("topped up", id, "with", token.FormatUnits(need, 24, 3), "NEAR", a.explorer(out.Hash))
+	}
+	return nil
 }

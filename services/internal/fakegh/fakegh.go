@@ -305,7 +305,7 @@ func (s *Store) reviews(w http.ResponseWriter, r *http.Request) {
 	}
 	out := []map[string]any{}
 	for i, a := range p.Approvers {
-		out = append(out, map[string]any{"user": s.users[a], "state": "APPROVED", "submitted_at": p.MergedAt.Add(-time.Duration(10+i) * time.Minute)})
+		out = append(out, map[string]any{"user": s.users[a], "state": "APPROVED", "author_association": "MEMBER", "submitted_at": p.MergedAt.Add(-time.Duration(10+i) * time.Minute)})
 	}
 	writeJSON(w, out)
 }

@@ -72,7 +72,7 @@ func (l Link) Text() string {
 type Repo struct {
 	Repo      string
 	RepoID    int64
-	Stars     int
+	StarsOK   bool // at least min_repo_stars; a flag so attesters agree despite new stars
 	CreatedAt int64
 	Fork      bool
 }
@@ -84,7 +84,11 @@ func (r Repo) Text() string {
 	if r.Fork {
 		fork = "1"
 	}
-	return strings.Join([]string{"repo", strings.ToLower(r.Repo), strconv.FormatInt(r.RepoID, 10), strconv.Itoa(r.Stars), strconv.FormatInt(r.CreatedAt, 10), fork}, "\n")
+	stars := "0"
+	if r.StarsOK {
+		stars = "1"
+	}
+	return strings.Join([]string{"repo", strings.ToLower(r.Repo), strconv.FormatInt(r.RepoID, 10), stars, strconv.FormatInt(r.CreatedAt, 10), fork}, "\n")
 }
 
 func MergeKey(repo string, number int) string {

@@ -36,8 +36,8 @@ func TestOtherClaims(t *testing.T) {
 	if l.Text() != "link\n42\nalice\nalice.testnet\n1500000000" || l.Key() != "link:42:alice.testnet" {
 		t.Fatal(l.Text(), l.Key())
 	}
-	r := Repo{Repo: "Helm/Chart-Testing", RepoID: 12345, Stars: 1500, CreatedAt: 1500000000}
-	if r.Text() != "repo\nhelm/chart-testing\n12345\n1500\n1500000000\n0" || r.Key() != "repo:helm/chart-testing" {
+	r := Repo{Repo: "Helm/Chart-Testing", RepoID: 12345, StarsOK: true, CreatedAt: 1500000000}
+	if r.Text() != "repo\nhelm/chart-testing\n12345\n1\n1500000000\n0" || r.Key() != "repo:helm/chart-testing" {
 		t.Fatal(r.Text(), r.Key())
 	}
 	if Hash(nil) != [32]byte{} {

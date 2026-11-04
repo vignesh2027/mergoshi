@@ -6,6 +6,9 @@ use crate::{Escrow, Link, Mergoshi, MergoshiExt, Part, RepoInfo, now_secs};
 use near_sdk::json_types::U128;
 use near_sdk::{AccountId, env, near, require};
 
+/// Reviewers tracked for one feast period; later newcomers wait for the next one.
+const MAX_GUEST_LIST: u32 = 400;
+
 /// A merge may claim a merge time up to this far in the future (clock skew).
 const FUTURE_SLACK: u64 = 600;
 
@@ -97,6 +100,10 @@ impl Mergoshi {
         let who = env::predecessor_account_id();
         let now = now_secs();
         let need = self.exile_need(&repo, now);
+        require!(
+            amount.0 >= need.min(self.params.exile_min.0 / 10),
+            "burn at least a tenth of the exile minimum, or what is left"
+        );
         self.token.internal_withdraw(&who, amount.0);
         near_contract_standards::fungible_token::events::FtBurn {
             owner_id: &who,
@@ -157,7 +164,9 @@ impl Mergoshi {
     pub(crate) fn reject(&mut self, key: &str) {
         self.stats.rounds_rejected += 1;
         if key.starts_with("link:") {
-            self.pending_links.remove(key);
+            if let Some(req) = self.pending_links.remove(key) {
+                self.requesting.remove(&req.by);
+            }
         } else if let Some(repo) = key.strip_prefix("repo:") {
             self.pending_repos.remove(repo);
         }
@@ -281,7 +290,10 @@ impl Mergoshi {
         for r in &reviewers {
             parts.push(self.credit(r.id, &r.login, pay.per_reviewer, "reviewer", key));
             let n = self.guests.get(&r.id).copied().unwrap_or(0);
-            self.guests.insert(r.id, n + 1);
+            // The guest list is bounded so the feast always fits in one call.
+            if n > 0 || self.guests.len() < MAX_GUEST_LIST {
+                self.guests.insert(r.id, n + 1);
+            }
         }
         for a in quorum {
             self.mint_to(a, pay.per_attester, key);
@@ -329,7 +341,12 @@ impl Mergoshi {
         role: &str,
         memo: &str,
     ) -> Part {
-        if let Some(link) = self.links.get(&github_id).cloned() {
+        if let Some(link) = self
+            .links
+            .get(&github_id)
+            .cloned()
+            .filter(|l| self.registered(&l.account))
+        {
             self.mint_to(&link.account, amount, memo);
             return Part {
                 role: role.into(),
@@ -362,7 +379,12 @@ impl Mergoshi {
     /// kept by the contract as that account's escrow.
     fn serve(&mut self, github_id: u64, amount: u128) -> Part {
         let me = env::current_account_id();
-        if let Some(link) = self.links.get(&github_id).cloned() {
+        if let Some(link) = self
+            .links
+            .get(&github_id)
+            .cloned()
+            .filter(|l| self.registered(&l.account))
+        {
             self.token
                 .internal_transfer(&me, &link.account, amount, Some("feast".into()));
             return Part {
@@ -431,8 +453,10 @@ impl Mergoshi {
         let Some(req) = self.pending_links.remove(key) else {
             return "no request".into();
         };
-        if req.by != l.account {
-            return "request was made by another account".into();
+        self.requesting.remove(&req.by);
+        // The request deposit paid for storage; make sure the account can hold tokens.
+        if !self.registered(&l.account) {
+            self.token.internal_register_account(&l.account);
         }
         if l.github_created_at + self.params.min_github_age_days as u64 * DAY > now {
             self.push_log(
@@ -497,31 +521,25 @@ impl Mergoshi {
         }
         let p = &self.params;
         let old_enough = r.created_at + p.min_repo_age_days as u64 * DAY <= now;
-        if r.fork || r.stars < p.min_repo_stars as u64 || !old_enough {
+        if r.fork || !r.stars_ok || !old_enough || self.repo_ids.contains_key(&r.repo_id) {
             let why = format!(
-                "{} has {} stars, created {}, fork {}: below the bar",
-                r.repo, r.stars, r.created_at, r.fork
+                "{} is below the bar or already enrolled under another name (enough stars {}, created {}, fork {})",
+                r.repo, r.stars_ok, r.created_at, r.fork
             );
             self.push_log("rejected", key, 0, 0, vec![], why);
             return "not eligible".into();
         }
+        self.repo_ids.insert(r.repo_id, r.repo.clone());
         self.repos.insert(
             r.repo.clone(),
             RepoInfo {
                 enrolled_at: now,
-                stars: r.stars,
+                repo_id: r.repo_id,
                 genesis: false,
             },
         );
         self.stats.repos += 1;
-        self.push_log(
-            "enroll",
-            key,
-            0,
-            0,
-            vec![],
-            format!("{} joined with {} stars", r.repo, r.stars),
-        );
+        self.push_log("enroll", key, 0, 0, vec![], format!("{} joined", r.repo));
         "enrolled".into()
     }
 }

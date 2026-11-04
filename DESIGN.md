@@ -29,8 +29,10 @@ A NEAR contract cannot call GitHub, and a GitHub webhook is signed with a reposi
 ```
 merge \n owner/repo \n number \n merge sha \n merged_at \n author id \n author login \n author created_at \n id:login,id:login (approvers, sorted by id)
 link  \n github id  \n login  \n near account \n github created_at
-repo  \n owner/repo \n repo id \n stars \n created_at \n fork 0|1
+repo  \n owner/repo \n repo id \n enough stars 0|1 \n created_at \n fork 0|1
 ```
+
+Attester policy, part of the claim specification: pull requests by bot accounts are not attested; approvers are reviewers with write access (`OWNER`, `MEMBER` or `COLLABORATOR`) whose latest review submitted at or before the merge is an approval; the repository claim carries a 0 or 1 for "has at least `min_repo_stars` stars" rather than the live count, so two attesters reading a few seconds apart still agree.
 
 **Rounds.** One round per key (`merge:owner/repo#123`, `link:<id>:<account>`, `repo:owner/repo`). The first commit opens it.
 
@@ -60,6 +62,9 @@ Security assumption: **fewer than a quorum of attesters collude**. Liveness assu
 | Throwaway GitHub accounts | Authors younger than 90 days mint nothing and do not count toward diversity; links need 90 days too | Aged accounts can be bought |
 | Repository farming | Diversity cap: a repository mints at most 1 + (distinct aged authors this or last 30-day window) / 3 merges a day, never more than 12; each author at most 4 a day; new repositories need 100 stars, 180 days and a 500 MRGO burn; holders can exile a farm | **An attacker who controls an eligible repository and several aged accounts can farm up to its cap until someone exiles it.** The simulation measures this: about 25 percent of supply after two years if nobody reacts, about 8 percent if holders exile each farm three weeks after it starts |
 | Self-approval rings | The author is never an approver; unreviewed merges mint 20 percent less | Puppets can approve each other; the diversity cap and exile bound the damage |
+| Attester commits and never reveals | No reward; every miss is counted on chain (`missed`) and shown on the dashboard | No automatic removal, since the set is fixed |
+| Payout to an account that cannot hold tokens | Link requests register the account and block unregistering while pending; linked accounts and attesters can never unregister; any payout to an unregistered account falls back to escrow, so a reveal batch never panics | none |
+| Storage spam | Link requests and proposals carry a deposit; exile burns must be at least a tenth of the minimum; dust unregister burns are counted but not logged; transfers to the contract itself are refused; the feast guest list is capped at 400 per period so the feast always fits in one call | |
 | Exile griefing | Exiling costs as much as the repository minted over two windows, at least 1 000 MRGO, burned | A rich holder can exile a small honest repository. Cost scales with the repository's own output |
 
 Out of scope, by design: changing any parameter, removing an attester, delisting a repository other than by exile, or recovering coins. There is no admin key to do any of it.

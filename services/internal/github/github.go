@@ -223,6 +223,7 @@ func (c *Client) Approvers(ctx context.Context, repo string, number int, authorI
 		User        User      `json:"user"`
 		State       string    `json:"state"`
 		SubmittedAt time.Time `json:"submitted_at"`
+		Association string    `json:"author_association"`
 	}
 	latest := map[int64]review{}
 	for page := 1; page <= 5; page++ {
@@ -245,12 +246,22 @@ func (c *Client) Approvers(ctx context.Context, repo string, number int, authorI
 	}
 	var out []User
 	for id, r := range latest {
-		if id != authorID && r.State == "APPROVED" && !r.User.IsBot() {
+		if id != authorID && r.State == "APPROVED" && !r.User.IsBot() && maintainer(r.Association) {
 			out = append(out, r.User)
 		}
 	}
 	sort.Slice(out, func(i, j int) bool { return out[i].ID < out[j].ID })
 	return out, nil
+}
+
+// maintainer reports whether a review comes from someone with write access.
+// Approvals from drive-by accounts do not count toward the review share.
+func maintainer(association string) bool {
+	switch association {
+	case "OWNER", "MEMBER", "COLLABORATOR":
+		return true
+	}
+	return false
 }
 
 // Repo is the repository data used for enrollment.

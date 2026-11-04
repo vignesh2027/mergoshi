@@ -136,7 +136,7 @@ type Attester struct {
 type RepoInfo struct {
 	Name       string
 	EnrolledAt int64 `json:"enrolled_at"`
-	Stars      int64 `json:"stars"`
+	RepoID     int64 `json:"repo_id"`
 	Genesis    bool  `json:"genesis"`
 }
 
@@ -416,16 +416,20 @@ func Bond(amount *big.Int) near.FunctionCall {
 	return fc
 }
 
+// Prepaid gas is reserved from the signer's balance up front (0.1 NEAR per
+// 100 Tgas on testnet), so batches ask for what they need, not the maximum.
+func gasFor(base, per uint64, n int) uint64 { return min(base+per*uint64(n), 300) }
+
 func Commit(items []CommitItem) near.FunctionCall {
-	return near.CallArgs("commit", map[string]any{"items": items}, 300)
+	return near.CallArgs("commit", map[string]any{"items": items}, gasFor(15, 5, len(items)))
 }
 
 func Reveal(items []RevealItem) near.FunctionCall {
-	return near.CallArgs("reveal", map[string]any{"items": items}, 300)
+	return near.CallArgs("reveal", map[string]any{"items": items}, gasFor(30, 27, len(items)))
 }
 
 func Sweep(keys []string) near.FunctionCall {
-	return near.CallArgs("sweep", map[string]any{"keys": keys}, 100)
+	return near.CallArgs("sweep", map[string]any{"keys": keys}, gasFor(10, 4, len(keys)))
 }
 
 func Feast() near.FunctionCall { return near.CallArgs("feast", map[string]any{}, 300) }
