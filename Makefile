@@ -61,8 +61,11 @@ clean:
 	rm -rf bin contract/target .localnet/home .localnet/env .localnet/state
 
 ## Hosting (optional): the testnet attesters and a read-only dashboard on Modal.
+## Only what the attesters need goes to Modal: never the root key.
 modal-secret:
-	modal secret create mergoshi-attesters-env --from-dotenv .env --force
+	@python3 -c 'import json,re; print(json.dumps({k:v for k,v in (l.strip().split("=",1) for l in open(".env") if "=" in l and not l.startswith("#")) if re.fullmatch(r"MERGOSHI_(TOKEN|ATTESTER_[0-9]+(_KEY)?|SALT_SECRET)",k)}))' > .env.modal.json
+	modal secret create mergoshi-attesters-env --from-json .env.modal.json --force
+	@rm -f .env.modal.json
 
 modal-deploy:
 	cd services && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o ../bin/mergoshi-linux-amd64 ./cmd/mergoshi

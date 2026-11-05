@@ -386,12 +386,20 @@ func (a *app) retire(ctx context.Context, withdraw bool, beneficiary string) err
 		if beneficiary == "" {
 			return fmt.Errorf("-withdraw needs -beneficiary")
 		}
-		if out, err := acc.Send(ctx, tc.Contract, near.CallArgs("withdraw_bond", map[string]any{}, 20)); err != nil {
-			fmt.Println(acc.ID, "withdraw_bond:", err)
-		} else {
+		// Never delete an attester whose bond is still in the contract: once the
+		// account is gone nobody can withdraw it.
+		if !a.exists(ctx, acc.ID) {
+			continue
+		}
+		out, err := acc.Send(ctx, tc.Contract, near.CallArgs("withdraw_bond", map[string]any{}, 20))
+		if err != nil && !strings.Contains(err.Error(), "nothing to withdraw") {
+			fmt.Println(acc.ID, "withdraw_bond:", err, "(not deleting)")
+			continue
+		}
+		if err == nil {
 			fmt.Println(acc.ID, "bond withdrawn", a.explorer(out.Hash))
 		}
-		out, err := acc.Send(ctx, acc.ID, near.DeleteAccount{Beneficiary: beneficiary})
+		out, err = acc.Send(ctx, acc.ID, near.DeleteAccount{Beneficiary: beneficiary})
 		if err != nil {
 			fmt.Println(acc.ID, "delete:", err)
 			continue
