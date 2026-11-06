@@ -185,4 +185,6 @@ The project is therefore called **Mergoshi** (a merge plus the familiar meme suf
 
 Candidates that were rejected: Pullmint (a GitHub repository "Pullmint" already does pull request analysis, and the ticker PMINT is taken), Mergeling (Mergelings games on the App Store), Lgtmo (LGTMoon tools on GitHub). No trademark database search was run; the web and store searches found no registered use.
 
-The logo (`assets/logo.svg`, `assets/logo-512.png`) is original: a blue coin whose white M has its two middle strokes merging into one stem, tied by a deep violet knot. It uses only the project palette (#2563EB, #1D4ED8, #3B82F6, white, #4C1D95) and borrows no shape from GitHub's, NEAR's or any coin's mark.
+The logo (`assets/logo.svg`, `assets/logo-512.png`) is original: a coin green (#0F3D2E) coin with a milled mint (#5EE6A8) edge and a zipper on its face, where two rows of teeth close into one interlocked row under a white slider, the way two branches become one merge. It borrows no shape from GitHub's merge or branch icons, NEAR's marks or any coin's mark. The web dashboard uses a simplified drawing, `services/internal/web/static/favicon.svg`, as its browser tab icon.
+
+The repository logo was redrawn on 6 November 2026. The deployed contract still carries the original blue M coin as its token icon; it will change only with a future redeploy.
