@@ -196,6 +196,7 @@ type PullRequest struct {
 	MergedAt       *time.Time `json:"merged_at"`
 	MergeCommitSHA string     `json:"merge_commit_sha"`
 	User           User       `json:"user"`
+	MergedBy       *User      `json:"merged_by"`
 	Base           struct {
 		Ref  string `json:"ref"`
 		Repo struct {
@@ -214,11 +215,16 @@ func (c *Client) Pull(ctx context.Context, repo string, number int) (*PullReques
 	return &pr, nil
 }
 
+// MinPriorMerges is how many pull requests a CONTRIBUTOR approver must have
+// had merged into the repository, before this merge, for the approval to count.
+const MinPriorMerges = 3
+
 // Approvers returns the accounts whose latest review submitted at or before
-// `cutoff` (the merge time) is an approval, sorted by account id. Reviews after
-// the merge are ignored so every attester sees the same set. The author is
-// never counted.
-func (c *Client) Approvers(ctx context.Context, repo string, number int, authorID int64, cutoff time.Time) ([]User, error) {
+// `cutoff` (the merge time) is an approval from someone trusted in the
+// repository (see trusted), sorted by account id. Reviews after the merge are
+// ignored so every attester sees the same set. The author is never counted.
+// mergedByID is the account that merged the pull request, or 0 if unknown.
+func (c *Client) Approvers(ctx context.Context, repo string, number int, authorID, mergedByID int64, cutoff time.Time) ([]User, error) {
 	type review struct {
 		User        User      `json:"user"`
 		State       string    `json:"state"`
@@ -246,7 +252,14 @@ func (c *Client) Approvers(ctx context.Context, repo string, number int, authorI
 	}
 	var out []User
 	for id, r := range latest {
-		if id != authorID && r.State == "APPROVED" && !r.User.IsBot() && maintainer(r.Association) {
+		if id == authorID || r.State != "APPROVED" || r.User.IsBot() {
+			continue
+		}
+		ok, err := c.trusted(ctx, repo, r.User, r.Association, mergedByID, cutoff)
+		if err != nil {
+			return nil, err
+		}
+		if ok {
 			out = append(out, r.User)
 		}
 	}
@@ -254,14 +267,54 @@ func (c *Client) Approvers(ctx context.Context, repo string, number int, authorI
 	return out, nil
 }
 
-// maintainer reports whether a review comes from someone with write access.
-// Approvals from drive-by accounts do not count toward the review share.
-func maintainer(association string) bool {
+// trusted decides whether an approval counts toward the review share. GitHub
+// reports a reviewer's relation to the repository as author_association:
+//
+//   - OWNER, MEMBER and COLLABORATOR have write access or belong to the owning
+//     organization, so their approvals count.
+//   - CONTRIBUTOR only says the account has had a commit merged before. GitHub
+//     also shows organization members whose membership is private this way, so
+//     real maintainers often appear as CONTRIBUTOR. Their approval counts when
+//     there is evidence they are part of the project: they merged this pull
+//     request themselves (merging needs write access), or at least
+//     MinPriorMerges of their own pull requests were merged into the repository
+//     before this merge. One typo fix is not enough to be paid for reviewing.
+//   - FIRST_TIME_CONTRIBUTOR, FIRST_TIMER, NONE and MANNEQUIN never count, so a
+//     drive-by account cannot farm the share by approving.
+//
+// Every input is fixed once the pull request is merged, so attesters reading
+// at different times reach the same answer.
+func (c *Client) trusted(ctx context.Context, repo string, u User, association string, mergedByID int64, cutoff time.Time) (bool, error) {
 	switch association {
 	case "OWNER", "MEMBER", "COLLABORATOR":
-		return true
+		return true, nil
+	case "CONTRIBUTOR":
+		if mergedByID != 0 && u.ID == mergedByID {
+			return true, nil
+		}
+		n, err := c.CountMergedBefore(ctx, repo, u.Login, cutoff)
+		if err != nil {
+			return false, err
+		}
+		return n >= MinPriorMerges, nil
 	}
-	return false
+	return false, nil
+}
+
+// CountMergedBefore counts pull requests by login merged into repo strictly
+// before t. It costs one search call.
+func (c *Client) CountMergedBefore(ctx context.Context, repo, login string, t time.Time) (int, error) {
+	if err := c.waitSearch(ctx); err != nil {
+		return 0, err
+	}
+	q := fmt.Sprintf("repo:%s is:pr is:merged author:%s merged:<%s", repo, login, t.UTC().Format(time.RFC3339))
+	var res struct {
+		Total int `json:"total_count"`
+	}
+	if err := c.get(ctx, "/search/issues?per_page=1&q="+url.QueryEscape(q), &res); err != nil {
+		return 0, err
+	}
+	return res.Total, nil
 }
 
 // Repo is the repository data used for enrollment.

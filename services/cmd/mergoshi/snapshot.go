@@ -122,7 +122,7 @@ func runSnapshot(ctx context.Context, gh *github.Client, out string, days int, o
 		step := max(n/reviewSample, 1)
 		for i := 0; i < n && len(snap.Reviews) < reviewSample; i += step {
 			c := candidates[i]
-			apps, err := gh.Approvers(ctx, c.repo, c.number, c.author, time.Now().Add(24*time.Hour))
+			apps, err := gh.Approvers(ctx, c.repo, c.number, c.author, 0, time.Now().Add(24*time.Hour))
 			if err != nil {
 				fmt.Println("reviews sample stopped early:", err)
 				break

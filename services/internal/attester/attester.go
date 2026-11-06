@@ -475,7 +475,11 @@ func (a *Attester) buildMerge(ctx context.Context, key string) (*string, error) 
 	if err != nil {
 		return nil, err
 	}
-	apps, err := a.gh.Approvers(ctx, repo, number, pr.User.ID, *pr.MergedAt)
+	var mergedBy int64
+	if pr.MergedBy != nil {
+		mergedBy = pr.MergedBy.ID
+	}
+	apps, err := a.gh.Approvers(ctx, repo, number, pr.User.ID, mergedBy, *pr.MergedAt)
 	if err != nil {
 		return nil, err
 	}
