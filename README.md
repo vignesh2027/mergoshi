@@ -57,9 +57,9 @@ make test-unit   # contract unit tests, Go tests, simulation tests; no network
 make test        # also the sandbox integration test (downloads near-sandbox on first run)
 ```
 
-* `contract/src/tests.rs`: 33 tests including `golden_replay_matches_the_simulation`, which replays the 195 events in `sim/golden.json` through real commit and reveal rounds and requires the same supply, burns, escrow and balances as the Python model.
+* `contract/src`: 38 unit tests, 30 of them in `tests.rs`, including `golden_replay_matches_the_simulation`, which replays the 195 events in `sim/golden.json` through real commit and reveal rounds and requires the same supply, burns, escrow and balances as the Python model.
 * `contract/tests/sandbox.rs`: deploys the wasm to a sandbox node and runs a mint, a slash, a link and a transfer.
-* `services/...`: claim encoding shared test vectors (the same hashes are asserted in Rust), attester behaviour against the fake GitHub, NEAR transaction encoding, templates.
+* `services/...`: claim encoding shared test vectors (the same hashes are asserted in Rust), attester behaviour against the fake GitHub, the approver trust rule, NEAR transaction encoding, templates.
 * `sim/tests`: the rules, the golden file and the scenarios.
 
 ## Simulation
@@ -78,8 +78,16 @@ Writes the charts and `results.json` to `sim/out`. The model is driven by `sim/d
 
 The live deployment:
 
-* token `token.mergoshi-8104ad.testnet`
-* attesters `attester-1.mergoshi-8104ad.testnet`, `attester-2.mergoshi-8104ad.testnet`, `attester-3.mergoshi-8104ad.testnet`
+* dashboard https://applemacbook6sep2004--mergoshi-attesters-dashboard.us-east.modal.run
+* token `token.mergoshi-829859.testnet`, deployed in [ApYCocxV...](https://testnet.nearblocks.io/txns/ApYCocxVgZX3bGLnhTYLDp5p8KcmHejwjvUtTTP5oypg)
+* attesters `attester-1.mergoshi-829859.testnet`, `attester-2.mergoshi-829859.testnet`, `attester-3.mergoshi-829859.testnet`, each bonded with 0.2 NEAR
+* first mint: DataDog/go-sqllexer#120, settled by the reveal in [FgCMFoJi...](https://testnet.nearblocks.io/txns/FgCMFoJiz22ebZNmNvAqLKkFAbpde2PYESfECYE1Bxdd)
+
+That first mint shows 80 MRGO with no approver. The pull request was approved by a project maintainer whom GitHub labels `CONTRIBUTOR` (their organization membership is private), and the attesters at the time counted only `OWNER`, `MEMBER` and `COLLABORATOR`. The rule now also accepts a `CONTRIBUTOR` who merged the pull request or has at least three earlier merged pull requests in the repository ([DESIGN.md](DESIGN.md#3-proving-a-merge-on-chain)). A merge mints only once, so that entry stays as it is.
+
+The dashboard and the three attesters run in one small container on Modal (`deploy/modal_app.py`). `make modal-secret` copies only the attester keys, the salt and the token id from `.env` into a Modal secret, never the root key; `make modal-deploy` builds a Linux binary and deploys it. To stay inside GitHub's unauthenticated limit of 60 calls an hour, only the first attester looks for new merges, one every 8 minutes, while all three answer open rounds every 20 seconds.
+
+**Superseded deployment.** An earlier token, `token.mergoshi-8104ad.testnet`, is retired. A code review found bugs in it, and since the contract has no owner it cannot be upgraded, so the token was deployed again under a new root. Its attesters were retired and their spare NEAR moved to the new root. One mistake happened there: the retire command deleted attesters 2 and 3 before their bonds were withdrawn, so 0.4 testnet NEAR stays locked in the old contract for good. The command now refuses to delete an attester whose bond is still held.
 
 To deploy your own copy:
 
