@@ -8,5 +8,5 @@ __pycache__/
 *.pyc
 *.log
 .DS_Store
-.state/
+.state*/
 .env.modal*
