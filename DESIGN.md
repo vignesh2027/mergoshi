@@ -156,17 +156,7 @@ Go, no third-party modules:
 * `mergoshi bootstrap`: creates one root account through the public testnet helper, attester sub-accounts, deploys and launches the token. Idempotent.
 * `merged local`: one command for judges. Starts a near-sandbox node, a local fake GitHub that serves the recorded snapshot and lets you merge a pull request with a button, three attesters and the dashboard.
 
-## 9. Demo script (two minutes)
-
-1. 0:00 Hook. "This memecoin only mints when a pull request is merged. No admin key, no server that can mint." Show the token on the testnet explorer.
-2. 0:15 Dashboard on testnet: supply, ten genesis repositories with their live daily caps, three attesters with bonds, and the ledger of real October merges into OpenTelemetry, Prometheus and Datadog repositories, each split between author, reviewers, attesters and the pot.
-3. 0:40 Local mode: click "Merge" on the fake GitHub. Watch the round open, three commits, reveals, and the mint land with the LGTM split. Then merge one with no approvals and show the withheld review share.
-4. 1:05 A lying attester: run the scripted liar, watch the `null` quorum reject it and the slash appear in the ledger.
-5. 1:20 Rituals: link a GitHub account and watch its escrow release; trigger the feast (half burned, half to reviewers); exile a farming repository.
-6. 1:40 The simulation charts: supply under five scenarios and the farmer's share with and without exile.
-7. 1:55 Close: parameters page, every rule fixed at launch.
-
-## 10. Name and logo
+## 9. Name and logo
 
 The working name was "Merged". A search on 4 November 2026 showed it collides: the App Store lists apps called "Merged" and "Merged@", CoinGecko lists several "Merged" bridged tokens (zkLink Nova Merged USDT, ETH, DAI, USDC), and tokens named Merge (MERGE) and MERG already trade. It is also an everyday git word, so it could never be found in a search.
 
