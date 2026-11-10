@@ -108,6 +108,16 @@ Publish a public gist containing `mergoshi-link:<your NEAR account>`, then call 
 
 Read the threat model in [DESIGN.md](DESIGN.md#4-threat-model-for-minting). In short: safety assumes fewer than a quorum of attesters collude; an attacker who controls an eligible repository and several aged GitHub accounts can farm up to that repository's cap until holders exile it; no parameter can be changed after launch, by design.
 
+## Built with
+
+- Contract: Rust, near-sdk 5 and near-contract-standards (NEP-141, NEP-145, NEP-148), built with cargo-near; local runs use near-sandbox.
+- Attesters, dashboard and NEAR client: Go standard library. Simulation: Python standard library.
+- Much of the code was written with AI coding assistants (Claude Code) under my direction, during the hackathon window. The contract tests, the Go tests and the simulation checks verify it.
+
+## Also by me for this hackathon
+
+[Haat](https://github.com/vignesh2027/haat), a village market game on NEAR (games track). The two projects are independent. They share only a small Go NEAR client (base58, keys, transaction signing and RPC) that I copied from one repo to the other.
+
 ## License
 
 MIT
