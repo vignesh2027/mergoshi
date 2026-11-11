@@ -13,6 +13,14 @@ A memecoin on NEAR that only mints when code ships. Every MRGO comes from a pull
 
 Track: **Memecoins With Mechanics**. The design, threat model, parameter choices and the simulation behind them are in [DESIGN.md](DESIGN.md).
 
+**Live dashboard:** https://mergoshi.140-245-16-129.sslip.io (NEAR testnet, read only)
+
+**Demo video:** https://youtu.be/8fxcAUCNbgg
+
+Music: "Digital Lemonade" Kevin MacLeod (incompetech.com)<br>
+Licensed under Creative Commons: By Attribution 4.0 License<br>
+http://creativecommons.org/licenses/by/4.0/
+
 ## Layout
 
 ```
@@ -78,14 +86,14 @@ Writes the charts and `results.json` to `sim/out`. The model is driven by `sim/d
 
 The live deployment:
 
-* dashboard https://applemacbook6sep2004--mergoshi-attesters-dashboard.us-east.modal.run
+* dashboard https://mergoshi.140-245-16-129.sslip.io
 * token `token.mergoshi-829859.testnet`, deployed in [ApYCocxV...](https://testnet.nearblocks.io/txns/ApYCocxVgZX3bGLnhTYLDp5p8KcmHejwjvUtTTP5oypg)
 * attesters `attester-1.mergoshi-829859.testnet`, `attester-2.mergoshi-829859.testnet`, `attester-3.mergoshi-829859.testnet`, each bonded with 0.2 NEAR
 * first mint: DataDog/go-sqllexer#120, settled by the reveal in [FgCMFoJi...](https://testnet.nearblocks.io/txns/FgCMFoJiz22ebZNmNvAqLKkFAbpde2PYESfECYE1Bxdd)
 
 That first mint shows 80 MRGO with no approver. The pull request was approved by a project maintainer whom GitHub labels `CONTRIBUTOR` (their organization membership is private), and the attesters at the time counted only `OWNER`, `MEMBER` and `COLLABORATOR`. The rule now also accepts a `CONTRIBUTOR` who merged the pull request or has at least three earlier merged pull requests in the repository ([DESIGN.md](DESIGN.md#3-proving-a-merge-on-chain)). A merge mints only once, so that entry stays as it is.
 
-The dashboard and the three attesters run in one small container on Modal (`deploy/modal_app.py`). `make modal-secret` copies only the attester keys, the salt and the token id from `.env` into a Modal secret, never the root key; `make modal-deploy` builds a Linux binary and deploys it. To stay inside GitHub's unauthenticated limit of 60 calls an hour, only the first attester looks for new merges, one every 8 minutes, while all three answer open rounds every 20 seconds.
+The dashboard and the three attesters run in one small Docker container on an Oracle Cloud Always Free VM, behind Caddy for HTTPS, with the attester state on a host volume. It runs the same binary and settings as the Modal app, and like it receives only the attester keys, the salt and the token id from `.env`, never the root key. The Modal deployment still works: `make modal-secret` copies those same values into a Modal secret and `make modal-deploy` builds a Linux binary and deploys it (`deploy/modal_app.py`). To stay inside GitHub's unauthenticated limit of 60 calls an hour, only the first attester looks for new merges, one every 8 minutes, while all three answer open rounds every 20 seconds.
 
 **Superseded deployment.** An earlier token, `token.mergoshi-8104ad.testnet`, is retired. A code review found bugs in it, and since the contract has no owner it cannot be upgraded, so the token was deployed again under a new root. Its attesters were retired and their spare NEAR moved to the new root. One mistake happened there: the retire command deleted attesters 2 and 3 before their bonds were withdrawn, so 0.4 testnet NEAR stays locked in the old contract for good. The command now refuses to delete an attester whose bond is still held.
 
