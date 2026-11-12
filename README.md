@@ -15,7 +15,7 @@ Track: **Memecoins With Mechanics**. The design, threat model, parameter choices
 
 **Live dashboard:** https://mergoshi.140-245-16-129.sslip.io (NEAR testnet, read only)
 
-**Demo video:** https://youtu.be/8fxcAUCNbgg
+**Demo video:** https://youtu.be/mOgbRlTQnaE
 
 Music: "Digital Lemonade" Kevin MacLeod (incompetech.com)<br>
 Licensed under Creative Commons: By Attribution 4.0 License<br>
