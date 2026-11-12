@@ -21,6 +21,12 @@ Music: "Digital Lemonade" Kevin MacLeod (incompetech.com)<br>
 Licensed under Creative Commons: By Attribution 4.0 License<br>
 http://creativecommons.org/licenses/by/4.0/
 
+**Try it in two minutes**
+
+1. Run `make local` and open http://localhost:8080/fake.
+2. Pick a repository, an author and an approver, then press **Merge pull request**. Within a few seconds the live page at http://localhost:8080 shows the attesters commit, reveal and mint 100 MRGO, split 70 / 20 / 5 / 5.
+3. Back on /fake, press **Send a lying attester**. The ledger shows the round rejected and the liar's bond slashed.
+
 ## Layout
 
 ```
@@ -115,6 +121,12 @@ Publish a public gist containing `mergoshi-link:<your NEAR account>`, then call 
 ## Limits
 
 Read the threat model in [DESIGN.md](DESIGN.md#4-threat-model-for-minting). In short: safety assumes fewer than a quorum of attesters collude; an attacker who controls an eligible repository and several aged GitHub accounts can farm up to that repository's cap until holders exile it; no parameter can be changed after launch, by design.
+
+Said plainly for this deployment:
+
+* I run all three testnet attesters, in one container. The attester set is fixed at launch (`bond()` refuses any account not in the launch list), so on this testnet token the quorum assumption comes down to trusting me. A real launch needs attesters run by different people, each with its own GitHub token.
+* The ten genesis repositories are projects I have merged work into, picked because I could check their merge history by hand. The first testnet mint is my own pull request. Testnet MRGO has no value, and anyone can propose another repository by burning the offering.
+* Mergoshi is not affiliated with or endorsed by any of the projects it reads. Their contributors' coins wait in escrow for them and burn if nobody claims them before the fuse runs out.
 
 ## Built with
 
